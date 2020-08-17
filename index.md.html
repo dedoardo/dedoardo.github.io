@@ -1,0 +1,375 @@
+<meta charset="utf-8" lang="en"><style class="fallback">body{visibility:hidden; max-width: 1000px}</style>
+
+<title>Edoardo's Lair</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
+
+<style type="text/css">
+	body {
+		max-width: 1000px;
+		font-family: 'Roboto Slab', serif;
+		font-size: 14px;
+	}
+
+	.md .nonumberh2 {
+		border-bottom: 0px;
+		/*margin-top: 0px;
+		margin-bottom: 0px;
+		padding-top: 0px;*/
+	}
+
+	.md .nonumberh3 {
+		border-top: 0px;
+		padding-top: 0px;
+		/*margin-top: 0px;
+		margin-bottom: 0px;
+		padding-top: 0px;*/
+	}
+
+	a {
+		font-size: 15px;
+		font-style: bold;
+	}
+
+	.my_image {
+		width: 20%; 
+		height:auto; 
+		float:left; 
+		padding-right: 15px; 
+		padding-top: 30px;
+	}
+
+	.my_text {
+		width: 75%; 
+		height:auto; 
+		float:left;
+	}
+
+	.pub_row {
+    	width:100%;
+		//height:auto;
+	}
+
+	.pub_row:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+
+	.pub_image {
+		width: 15%; 
+		height:auto; 
+		float:left; 
+		margin-right: 15px; 
+		padding-top: 0px;
+		border-style: solid;
+		border: 0;
+	}
+
+	.pub_image img {
+		min-width: 100%;
+		min-height: 100%;
+		width: auto;
+		height: auto;
+	}
+
+	.pub_text {
+		width: 80%; 
+		height:auto; 
+		float:left;
+	}
+
+	.code_row {
+    	width:100%;
+		//height:auto;
+	}
+
+	.code_row:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+
+	.code_image {
+		width: 15%; 
+		height:auto; 
+		float:left; 
+		margin-right: 15px; 
+		padding-top: 0px;
+		border-style: solid;
+		border: 0;
+	}
+
+	.code_image img {
+		min-width: 100%;
+		min-height: 100%;
+		width: auto;
+		height: auto;
+	}
+
+	.code_text {
+		width: 80%; 
+		height:auto; 
+		float:left;
+	}
+
+
+	.game_row {
+    	width:100%;
+		//height:auto;
+	}
+
+	.game_row:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+
+	.game_image {
+		width: 30%; 
+		height:auto; 
+		float:left; 
+		margin-right: 15px; 
+		padding-top: 0px;
+		border-style: solid;
+		border: 0;
+	}
+
+	.game_image img {
+		min-width: 100%;
+		min-height: 100%;
+		width: auto;
+		height: auto;
+	}
+
+	.game_text {
+		width: 65%; 
+		height:auto; 
+		float:left;
+	}
+
+
+</style>
+
+<script type="text/javascript">
+    function make_me_smile(my_image)
+    {
+        my_image.src = 'figs/me_smile.jpeg';
+    }
+    function make_me_sad(my_image)
+    {
+    	my_image.src = 'figs/me_neutral.jpeg'
+    }
+</script>
+
+<!-- It's me! Edoardo! -->
+<div>
+	<div class=my_image><img src="figs/me_neutral.jpeg" border="2" onmouseover="make_me_smile(this)" onmouseout="make_me_sad(this)"></div>
+	<div class=my_text>
+		
+(##) Edoardo Alberto Dominici
+
+I recently obtained a Master's from the University of British Columbia, my interests are in efficient algorithms for image processing and synthesis.<br/>
+
+During my MSc I worked on perception-driven vectorization algorithms under the supervision of [dr. Alla Sheffer](http://cs.ubc.ca/~sheffa) where I also had the amazing opportunity of having a voice in the new video game programming course.
+My BSc thesis was on WebGL image retargeting under the supervision of [dr. Marco Tarini](http://tarini.di.unimi.it/). <br/>
+
+I enjoy multiplayer games in my spare time, currently trying to get past [Diamond 3](https://tracker.gg/apex/profile/origin/1UnskilledPillow/overview) in Apex Legends. I was a 2.4k resto druid in a previous life.
+	</div>
+</div>
+<br>
+
+
+<!-- Pieces of paper -->
+(##) Education
+
+2017-2020 - MSc University of British Columbia<br/>
+Thesis: [Perception-Aligned Vectorization of Raster Clip-Art](https://open.library.ubc.ca/cIRcle/collections/ubctheses/24/items/1.0389752)<br/>
+Teaching Assistant: 
+	- CPSC314: Computer Graphics (Fall '17)<br/>
+	- CPSC436D: Video Game Programming (Spring '18, Spring '19)<br/>
+
+2014-2017 - BSC University of Pisa (Erasmus+ University of Stirling)<br/>
+Thesis: [Practical Image Retargeting](downloads/bsc_thesis.pdf)
+
+<!-- Meaningful pieces of paper -->
+(##) Publications
+
+<div class=pub_row>
+<div class=pub_image>
+	<img src="figs/pubs/video_decomp_2020_1.gif">
+	<img src="figs/pubs/video_decomp_2020_0.gif">
+</div>
+<div class=pub_text>
+
+Unsupervised Video Decomposition using Spatio-Temporal Iterative Inference<br/>
+*In submission*<br/>
+Polina Zablotaiska, **Edoardo A. Dominici**, Leonid Sigal, Andreas Lehrmann<br/>
+[paper](https://arxiv.org/abs/2006.14727)
+</div>
+</div>
+
+<div class=pub_row>
+<div class=pub_image><img src="figs/pubs/polyfit_2020.png"></div>
+<div class=pub_text>
+
+PolyFit: Perception-Aligned Vectorization of Raster Clip-Art via Intermediate Polygonal Fitting<br/>
+*SIGGRAPH 2020, ACM Transactions on Graphics 39(4), DOI: 10.1145/3386569.3392401*<br/>
+**Edoardo A. Dominici**, Nico Schertler, Jonathan Griffin, Leonid Sigal, Alla Sheffer<br/>
+[project](http://www.cs.ubc.ca/labs/imager/tr/2020/ClipArtVectorization) [code](https://github.com/dedoardo/polyfit)
+</div>
+</div>
+
+<div class=pub_row>
+<div class=pub_image><img src="figs/pubs/vectorization_2018.png"></div>
+<div class=pub_text>
+
+Perception-Driven Semi-Structured Boundary Vectorization<br/>
+*SIGGRAPH 2018, ACM Transactions on Graphics 37(4), DOI: 10.1145/3197517.3201312*<br/>
+Shayan Hoshyari, **Edoardo A. Dominici**, Alla Sheffer, Nathan Carr, Zhaowen Wang, Duygu Ceylan, I-Chao Shen<br/>
+[project](http://www.cs.ubc.ca/labs/imager/tr/2018/PerceptionDrivenVectorization/) [demo](http://www.cs.ubc.ca/labs/imager/tr/2018/PerceptionDrivenVectorization/executable.zip)
+</div>
+</div>
+
+<!-- Virtual pieces of paper -->
+(##) Code 
+
+<div class=code_row>
+<div class=code_image><img src="figs/code/polyfit.png"></div>
+<div class=code_text> 
+(###) PolyFit - C++14, Eigen
+
+Vectorization research code designed for structured low-resolution multicolor inputs. Works by first computing a perceptually optimal polygonal approximation through a shortest cycle formulation on the raster boundary. This approximation is used to guide the curve fitting and model the supervised primitive classification. 
+
+[Github (soon)](https://github.com/dedoardo/polyfit)
+
+</div>
+</div>
+
+<div class=code_row>
+<div class=code_image><img src="figs/code/subdivide.png"></div>
+<div class=code_text> 
+
+(###) Loop, Catmull-clark subdivision surfaces - C99, AVX-256
+
+Implementation of surface subdivision schemes for triangular (Loop) and quadrilateral meshes (Catmull-Clark) manifold meshes. Experimenting with SoA layouts and SIMD intrinsics.
+
+[Code](downloads/subdivide.zip)
+
+</div>
+</div>
+
+
+<div class=code_row>
+<div class=code_image><img src="figs/code/terra.jpg"></div>
+<div class=code_text> 
+
+(###) Monte Carlo Path Tracer
+
+Unidirectional Monte Carlo path tracer supporting textures, multiple importance sampling, BSDFS (Lambertian, specular, glass) and multi-threaded rendering.
+
+[Github](https://github.com/dedoardo/terra)
+
+</div>
+</div>
+
+<div class=code_row>
+<div class=code_image><img src="figs/code/motion-graph.gif"></div>
+<div class=code_text> 
+
+(###) Motion Graphs
+
+Implementation of the Motion Graphs paper [Kovar et al '02]. Capable of loading a BVH motion sequence, correctly rendering it, identify similar motion segments and generate keyframes smoothly interpolating the two segment endpoints.<br/>
+(The download is big as it includes part of the BVH CMU dataset)
+
+[Code](downloads/motion-viewer.zip)
+
+</div>
+</div>
+
+<div class=code_row>
+<div class=code_image><img src="figs/code/retarget_solve.png"></div>
+<div class=code_text> 
+(###) Interior-point solver for constrained quadratic programming  - C++, Eigen
+
+Finds the minimizer of a quadratic function subject to equality and inequality constraints: Newton's method is applied to the KKT conditions to obtain a search direction which is then refined through Mehrotra predictor-corrector logic. I apply it to the relatively simple retargeting problem used in my BSc thesis.
+
+
+[Code](downloads/retarget-solver.zip) [Course report](downloads/retarget-solver-report.pdf)
+
+</div>
+</div>
+
+
+<div class=code_row>
+<div class=code_image><img src="figs/code/retarget.png"></div>
+<div class=code_text> 
+
+(###) WebGL image retargeting - C++, Javascript, WebGL
+
+Stores sparse and compact retargeting solutions as EXIF metadata in JPEG images. A client-side scripts extracts the metadata replacing the image with a WebGL canvas which interpolates the closest solutions to retarget the image to the desired resolution (inferred from its style).
+
+[Github](https://github.com/dedoardo/retarget)
+
+</div>
+</div>
+
+<div class=code_row>
+<div class=code_image><img src="figs/code/salmon_game.jpg"></div>
+<div class=code_text>
+
+(###) OpenGL template for video game programming course - C++, OpenGL, GLFW
+
+Skeleton game for UBC's game programming course, used as a first building block for each team's game. You are a majestic salmon on a quest for delicious fish but need to dodge deadly turtles in an impetuous sea. 
+
+[Code](downloads/template_salmon.zip)
+
+</div>
+</div>
+
+(##) Hackatons
+
+<div class=game_row>
+<div class=game_image>
+	<img src="figs/ggj/soundcube.gif">
+</div>
+<div class=game_text> 
+I participated in coding events during high-school and my undergrad studies with various degrees of success:
+	- [Heuristic web scraper](https://github.com/dedoardo/web2api) Python - Hackcortona 2016 (3rd)
+	- [SoundCube: 3D sound memory puzzle](a) C++, D3D11 - Internet Festival 2015 (2nd)
+	- [DreamSeeker: 2D maze platformer](https://itch.io/jam/IVgamejam/rate/13476) C++, D3D11 - Indie Vault Game Jam 2015
+	- [Er Core Che Core: 2D sidescroller](http://2013.globalgamejam.org/2013/er-core-che-core) C++, SFML - Global Game Jam 2013
+
+The D3D11 games were built on top of a [custom "engine"](downloads/stegosaurus.zip).
+</div>
+</div>
+
+<div class=game_row>
+	<div class=game_image><img src="figs/ggj/dreamseeker.gif"></div>
+	<div class=game_image><img src="figs/ggj/rome_2013.png"></div>
+</div>
+
+
+(##) Older code
+
+<div class=game_row>
+<div class=game_image>
+	<img src="figs/code/tiled_renderer.png">
+</div>
+<div class=game_text>
+I almost forgot these existed:
+	- [Tiled renderer (HDR, bloom, PCF shadow mapping)](https://github.com/dedoardo/tiled-renderer) - C++, D3D11 (2015) <br/>
+	- [Python to HLSL/GLSL transpiler](https://github.com/dedoardo/pysl) - Python, HLSL, GLSL
+	- [Live reloading of C code through DLL hotswapping](https://github.com/dedoardo/scriptosaurus) - C99 (2015) <br/>
+	- [Vector Shooter](https://sourceforge.net/projects/vshooter/files/?source=navbar) - C++, D3D11 (2012) <br/>
+	- [DarkSpark: 2D top-down shooter](http://www.pygame.org/project-Dark-Spark-2388-4046.html) - Python, Pygame (2012)
+</div>
+</div>
+
+<div class=game_row>
+	<div class=game_image><img src="figs/code/vector-shooter.gif"></div>
+	<div class=game_image><img src="figs/code/darkspark.gif"></div>
+</div>
+
+*The achievement I am most proud of is [this 2012 (simple) snake game](https://www.pygame.org/project/2447) which has received 3k+ downloads. Observe the reverse psychology in the marketing outweighting the fact that it's a very bad example on how to write a snake clone. It's has been hosted on Mediafire since 2012. *
+
+<!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace;}</style><script src="markdeep.min.js" charset="utf-8"></script><script src="https://casual-effects.com/markdeep/latest/markdeep.min.js" charset="utf-8"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>
