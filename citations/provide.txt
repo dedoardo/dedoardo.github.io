@@ -1,0 +1,12 @@
+@InProceedings{zablotskaia2021provide,
+  title     = {PROVIDE: a probabilistic framework for unsupervised video decomposition},
+  author    = {Zablotskaia, Polina and Dominici, Edoardo A. and Sigal, Leonid and Lehrmann, Andreas M.},
+  booktitle = {Proceedings of the Thirty-Seventh Conference on Uncertainty in Artificial Intelligence},
+  pages     = {2019--2028},
+  year      = {2021},
+  editor    = {de Campos, Cassio and Maathuis, Marloes H.},
+  volume    = {161},
+  series    = {Proceedings of Machine Learning Research},
+  publisher = {PMLR},
+  url       = {https://proceedings.mlr.press/v161/zablotskaia21a.html}
+}

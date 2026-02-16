@@ -1,0 +1,12 @@
+@article{hoshyari2018perception,
+  author    = {Hoshyari, Shayan and Dominici, Edoardo Alberto and Sheffer, Alla and Carr, Nathan and Wang, Zhaowen and Ceylan, Duygu and Shen, I-Chao},
+  title     = {Perception-Driven Semi-Structured Boundary Vectorization},
+  journal   = {ACM Transactions on Graphics},
+  year      = {2018},
+  volume    = {37},
+  number    = {4},
+  articleno = {118},
+  doi       = {10.1145/3197517.3201312},
+  publisher = {ACM},
+  address   = {New York, NY, USA}
+}

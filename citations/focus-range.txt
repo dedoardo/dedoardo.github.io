@@ -1,0 +1,13 @@
+@inproceedings{dominici2023focusrange,
+  author    = {Dominici, Edoardo Alberto and Schrade, Emanuel and Fraboni, Basile and Emrose, Luke and Black, Curtis},
+  title     = {Focus Range: Production Ray Tracing of Depth of Field},
+  booktitle = {SIGGRAPH Asia 2023 Technical Communications},
+  year      = {2023},
+  articleno = {4},
+  pages     = {1--4},
+  numpages  = {4},
+  doi       = {10.1145/3610543.3626156},
+  publisher = {ACM},
+  address   = {New York, NY, USA},
+  location  = {Sydney, NSW, Australia}
+}

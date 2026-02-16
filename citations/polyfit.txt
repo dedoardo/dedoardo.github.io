@@ -1,0 +1,12 @@
+@article{dominici2020polyfit,
+  author    = {Dominici, Edoardo Alberto and Schertler, Nico and Griffin, Jonathan and Hoshyari, Shayan and Sigal, Leonid and Sheffer, Alla},
+  title     = {PolyFit: Perception-aligned Vectorization of Raster Clip-art via Intermediate Polygonal Fitting},
+  journal   = {ACM Transactions on Graphics},
+  year      = {2020},
+  volume    = {39},
+  number    = {4},
+  articleno = {77},
+  doi       = {10.1145/3386569.3392401},
+  publisher = {ACM},
+  address   = {New York, NY, USA}
+}

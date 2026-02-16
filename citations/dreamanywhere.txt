@@ -1,0 +1,6 @@
+@article{dominici2025dreamanywhere,
+  title     = {DreamAnywhere: Object-Centric Panoramic 3D Scene Generation},
+  author    = {Dominici, Edoardo Alberto and Hladky, Jozef and Verhoeven, Floor and Radl, Lukas and Deixelberger, Thomas and Ainetter, Stefan and Drescher, Philipp and Hauswiesner, Stefan and Coomans, Arno and Nazzaro, Giacomo and Vardis, Konstantinos and Steinberger, Markus},
+  journal   = {arXiv preprint arXiv:2506.20367},
+  year      = {2025}
+}

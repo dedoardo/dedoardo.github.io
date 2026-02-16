@@ -1,0 +1,7 @@
+@inproceedings{coomans2026neural,
+  title     = {Real-time Rendering with a Neural Irradiance Volume},
+  author    = {Coomans, Arno and Nazzaro, Giacomo and Dominici, Edoardo Alberto and D{\"o}ring, Christian and Verhoeven, Floor and Vardis, Konstantinos and Steinberger, Markus},
+  booktitle = {Proceedings of Eurographics},
+  year      = {2026},
+  publisher = {The Eurographics Association}
+}

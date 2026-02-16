@@ -1,0 +1,11 @@
+@article{coomans2024realtime,
+  author    = {Coomans, Arno and Dominici, Edoardo Alberto and D{\"o}ring, Christian and Mueller, Joerg H. and Hladky, Jozef and Steinberger, Markus},
+  title     = {Real-time Neural Rendering of Dynamic Light Fields},
+  journal   = {Computer Graphics Forum},
+  volume    = {43},
+  number    = {2},
+  pages     = {e15014},
+  year      = {2024},
+  doi       = {10.1111/cgf.15014},
+  publisher = {The Eurographics Association and John Wiley \& Sons Ltd.}
+}
