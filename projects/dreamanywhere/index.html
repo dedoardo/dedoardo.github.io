@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>DreamAnywhere: Object Centric Panoramic 3D Scene Generation</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:image" content="videos/teaser.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="DreamAnywhere: Object Centric Panoramic 3D Scene Generation" />
+    <meta property="og:description"
+        content="Our method tackles text-to-3D scene generation by first creating a panoramic image with a finetuned diffusion model, serving as geometric and stylistic prior. Relevant instances of objects are segmented, reconstructed in high-fidelity and placed in the background environment." />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="DreamAnywhere: Object Centric Panoramic 3D Scene Generation" />
+    <meta name="twitter:description"
+        content="Our method tackles text-to-3D scene generation by first creating a panoramic image with a finetuned diffusion model, serving as geometric and stylistic prior. Relevant instances of objects are segmented, reconstructed in high-fidelity and placed in the background environment." />
+    <meta name="twitter:image" content="videos/teaser.png" />
+
+    <link rel="icon" href="favicon.ico">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8ZERS5BVPS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-8ZERS5BVPS');
+    </script>   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+        </script>
+    <script defer src="js/fontawesome.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+    <script src="js/app.js"></script>
+    <script src="js/synced_video_selector.js"></script>
+
+    <script type="module">
+        import { createSplatView, setSplatScene, setupCarousel } from "./js/splats.js"
+        setupCarousel(createSplatView("splat-picker"), document.querySelector("#splat-carousel"));
+    </script>
+    <style>
+        .final-element {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body style="padding: 5%; padding-top: min(15px, 5%); padding-bottom: min(5px, 5%); width: 100%">
+    <div class="container-lg text-center" style="max-width: 800px; margin: auto;" id="main">
+        <header role="banner">
+            <!-- <div class="container" id="main"> -->
+            <div class="row">
+                <h2 class="col-md-12 text-center">
+                    <b>DreamAnywhere:</b>  Object Centric Panoramic 3D Scene Generation</br>
+                </h2>
+            </div>
+
+            <!-- Authors -->
+            <div class="row justify-content-center" style="margin-top: 10px;">
+                <div class="col-md-10 text-center" style="font-size: 1rem;">
+                    <span><a href="https://dedoardo.github.io">Edoardo A. Dominici</a><sup>1</sup></span>,
+                    <span><a href="https://jozef.hladky.de/">Jozef Hladky</a><sup>1</sup></span>,
+                    <span><a href="https://floorverhoeven.github.io/">Floor Verhoeven</a><sup>1</sup></span>,
+                    <span><a href="https://r4dl.github.io/">Lukas Radl</a><sup>3</sup></span>,
+                    <span><a href="https://scholar.google.com/citations?user=q3KITmQAAAAJ">Thomas Deixelberger</a><sup>2,3</sup></span>,
+                    <span><a href="https://scholar.google.com/citations?user=VWNkvIwAAAAJ">Stefan Ainetter</a><sup>2</sup></span>,
+                    <span><a href="https://ivc.tugraz.at/people/philipp-drescher/">Philipp Drescher</a><sup>2,3</sup></span>,
+                    <span><a href="https://scholar.google.com/citations?user=EuhG2YQAAAAJ">Stefan Hauswiesner</a><sup>1</sup></span>,
+                    <span><a href="https://arnocoomans.be/">Arno Coomans</a><sup>1</sup></span>,
+                    <span><a href="https://scholar.google.com/citations?user=FZQdQiEAAAAJ">Giacomo Nazzaro</a><sup>1</sup></span>,
+                    <span><a href="https://kostasvardis.com/">Konstantinos Vardis</a><sup>1</sup></span>,
+                    <span><a href="https://www.markussteinberger.net/">Markus Steinberger</a><sup>1,3</sup></span>
+                </div>
+            </div>
+
+            <!-- Affiliations -->
+            <div class="row justify-content-center" style="margin-top: 8px;">
+                <div class="col-md-10 text-center" style="font-size: 0.9rem; color: #555;">
+                    Huawei Technologies: <sup>1</sup>Switzerland, <sup>2</sup>Austria &nbsp;&nbsp;
+                    <sup>3</sup>Graz University of Technology
+                </div>
+            </div>
+
+            <!-- Logos -->
+            <div class="row justify-content-center" style="margin-top: 15px;">
+                <div class="col-auto text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1275.5 287" width="120" style="margin-right: 30px;"><path fill="#24272A" d="M696.2 91.7h28.4v79c0 40.1-22.1 63.1-60.6 63.1-38.1 0-60-22.6-60-62v-80h28.4v79.1c0 23.4 11.5 35.9 32 35.9s31.8-12.2 31.8-34.9V91.7zm-160 56.4H472V91.7h-28.4v140H472v-56.9h64.1v56.9h28.4v-140h-28.4v56.4zm711.2-56.4v139.8h28V91.7h-28zm-111.5 79.7h51.7v-25.5h-51.7v-28.7h75V91.8h-103v139.8h105.7v-25.5h-77.7v-34.7zm-111.4 16.5l-31.8-96.3h-23.2l-31.8 96.3-30.9-96.2h-30.2l48.8 139.9h23.5l31.8-91.9 31.8 91.9h23.7l48.7-139.9h-29.5l-30.9 96.2zM826.1 92.5l61.1 139.1h-29.8l-12.6-29.1h-64.1l-.9 2-11.8 27.1h-29l61.7-139.9h24.8l.6.8zm6.8 81.4L812.7 127l-20.1 46.9-1.4 3.2h43l-1.3-3.2z"/><path fill="#CE0E2D" d="M164 216.8c.4-.3.5-.9.3-1.4A839.8 839.8 0 0061.8 49s-32.2 30.6-29.9 61.3a54 54 0 0018.7 36.9c28.1 27.4 96.1 62 111.9 69.9.5.2 1.1.1 1.5-.3m-10.5 23.4c-.2-.6-.8-1-1.5-1l-113.2 3.9c12.3 21.9 33 38.9 54.5 33.7 14.9-3.7 48.5-27.2 59.6-35.2.9-.7.6-1.3.6-1.4m1.7-10.1c.6-.9-.4-1.7-.4-1.7-49.7-33.6-146.1-85.2-146.1-85.2a67 67 0 0060.4 87.7c1.7.3 67.3 0 84.9-.1.5-.1.9-.3 1.2-.7m7.5-230c-4.9.4-18.2 3.5-18.2 3.5-30 7.7-37.1 35-37.1 35-5.5 17.1.1 36 .1 36 10 44.4 59.2 117.5 69.8 132.8.7.8 1.3.5 1.3.5.6-.2 1.1-.7 1.1-1.4C196.1 43.3 162.7.1 162.7.1m37.5 207.6c.6.2 1.3 0 1.6-.6 10.9-15.7 59.8-88.4 69.8-132.6 0 0 5.4-21.4.2-36 0 0-7.4-27.7-37.4-35 0 0-8.6-2.2-17.8-3.5 0 0-33.6 43.2-17.2 206.4-.1.6.3 1.1.8 1.3m26.8 31.6a2 2 0 00-1.3.9c-.1.6 0 1.1.4 1.5 10.8 7.8 43.7 30.8 59.5 35.2 0 0 29.3 10 54.7-33.7L227 239.3zM370.5 143s-96.2 51.7-146 85.3c-.5.4-.8 1-.6 1.6 0 0 .5.9 1.2.9 17.8 0 85.2.1 87-.2 6.7-.5 13.3-2 19.5-4.5 0 0 24-7.6 36.4-34.9 0 0 11.1-22.2 2.5-48.2m-155.1 73.8c.4.3 1 .4 1.5.1 16.2-8.1 83.7-42.4 111.6-69.7 0 0 17.7-14.2 18.6-37.1 2-31.7-29.9-61.1-29.9-61.1s-59 71.5-102.3 166a2 2 0 00.5 1.8"/></svg>
+                    <img src="images/tugraz.png" alt="TU Graz" height="40">
+                </div>
+            </div>
+
+            <!-- Links -->
+            <div class="row justify-content-center" style="margin-top: 15px; margin-bottom: 10px;">
+                <div class="col-auto">
+                    <a href="https://arxiv.org/abs/2506.20367" class="btn btn-dark btn-sm" style="border-radius: 20px; margin: 5px;">
+                        <i class="fas fa-file-pdf"></i> Paper
+                    </a>
+                    <a href="https://youtu.be/NdaVYCNGZmo" class="btn btn-dark btn-sm" style="border-radius: 20px; margin: 5px;">
+                        <i class="fab fa-youtube"></i> Video
+                    </a>
+                    <a href="https://drive.google.com/file/d/1sf9bcjyYnj7eMvJeNeJqcHZ04l31h5RL/view?usp=share_link" class="btn btn-dark btn-sm" style="border-radius: 20px; margin: 5px;">
+                        <i class="fas fa-images"></i> Slides
+                    </a>
+                    <a href="poster.png" class="btn btn-dark btn-sm" style="border-radius: 20px; margin: 5px;">
+                        <i class="fas fa-chalkboard"></i> Poster
+                    </a>
+                    <!-- <a href="#" class="btn btn-dark btn-sm" style="border-radius: 20px; margin: 5px;">
+                        <i class="fas fa-database"></i> Data
+                    </a> -->
+                </div>
+            </div>
+        <br>
+
+            </div>
+        </header>
+
+        <main role="main">
+            <!-- <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <video id="co3d-grid" poster="img/teaser_frame.jpg" width="100%" autoplay loop muted controls playsinline>
+					  <source src="videos/video.mp4" type="video/mp4"></source>
+                    </video>
+                </div>
+            </div> -->
+
+        <div class="row">
+        <div class="col-md-8 offset-md-2 d-flex justify-content-center">
+            <video id="co3d-grid"
+                poster="img/teaser_frame.jpg"
+                autoplay loop muted playsinline
+                style="max-width: 100%; height: auto;">
+            <source src="videos/supp_video.mp4" type="video/mp4">
+            </video>
+        </div>
+        </div>
+
+            <div class="row" style="margin-top: 20px;">
+                <div class="col-md-8 offset-md-2 rounded" style="text-align: center; padding: 15px; background-color: #d0d5ec;">
+                    <p style="margin: 0; color: rgb(0, 0, 0);"><strong>TL;DR:</strong> Modular 3D scene generation from text using 360° panoramas, object-centric decomposition, and hybrid inpainting for immersive navigation and editing.</p>
+                </div>
+            </div>
+             <br>
+             <br>
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <h3 style="text-align: center"> Overview </h3>
+                    <p class="text-justify" style="text-align: left; font-size: 0.9rem;">
+                        Our method tackles text-to-3D scene generation by first creating a panoramic image with a finetuned diffusion model, serving as geometric and stylistic prior. Relevant instances of objects are segmented, reconstructed in high-fidelity and placed in the background environment. The background is optimized for immersive viewing with a combination of 2D and 3D inpainting techniques.
+                    </p>
+
+                    <img src="videos/teaser.png" alt="Description of image" width="100%">
+                </div>
+            </div>
+            <br>
+            <br>
+
+            <!-- Panorama Generation -->
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <h3 style="text-align: center"> Panorama Generation </h3>
+                    <p class="text-justify" style="text-align: left; font-size: 0.9rem;">
+                        We guide the 360° panorama generation process using a perspective image derived from the same prompt, providing soft conditioning without enforcing pixel-level alignment. We achieve this using an IP-Adapter-style mechanism that introduces separate cross-attention layers in all transformer blocks of the diffusion model. We jointly fine-tune the panoramic LoRA with the IP-adapter using random perspective renders of the equirectangular image, enabling effective style transfer from perspective to panoramic images.
+                    </p>
+                    <img src="images/panorama_generation.png" alt="Panorama Generation" style="width: 100%; border-radius: 8px;">
+                    <br><br>
+                    <img src="images/panorama_examples.png" alt="Panorama Examples" style="width: 100%; border-radius: 8px;">
+                </div>
+            </div>
+            <br>
+
+            <!-- Instance Generation -->
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <h3 style="text-align: center"> Instance Generation </h3>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-md-4 offset-md-2">
+                    <img src="images/object_generation.png" alt="Object Generation" style="width: 100%; border-radius: 8px;">
+                </div>
+                <div class="col-md-4">
+                    <p class="text-justify" style="font-size: 0.9rem;">
+                        Our object reconstruction pipeline leverages the panorama and style information to generate a high-resolution reference image to be used for multi-view generation. The generated multi-view images are then transformed into 3D Gaussian splats through a reconstruction pipeline. Finally, we align the generated object with the original and place it in the scene.
+                    </p>
+                </div>
+            </div>
+            <br>
+
+            <!-- Hybrid Inpainting -->
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <h3 style="text-align: center"> Hybrid Inpainting </h3>
+                    <p class="text-justify" style="text-align: left; font-size: 0.9rem;">
+                        Our hybrid inpainting strategy combines 2D and 3D techniques: large-scale holes resulting from object removal are inpainted in the 360° image for global coherence, while smaller disocclusions caused by the 3D projection are addressed with 3D inpainting. The process proceeds in three steps: initialization and pretuning of the 3DGS point cloud, incremental inpainting to populate disoccluded regions with new Gaussians, and multi-view fine-tuning with score distillation to ensure consistency across viewpoints.
+                    </p>
+                    <img src="images/hybrid_inpainting.png" alt="Hybrid Inpainting" style="width: 100%; border-radius: 8px;">
+                </div>
+            </div>
+            <br>
+            <br>
+
+            <!-- <div class="row col-md-8 offset-md-2 rounded card" style="background-color: #d0d5ec;">
+                <br>
+                <h2 style="text-align: center;">Interactive Results</h2>
+                <div class="text-center" id="splat-picker">
+                    <div id="progress-container">
+                        <dialog open id="progress-dialog">
+                            <label for="progress-indicator">Loading model...</label>
+                            <progress max="100" id="progress-indicator"></progress>
+                        </dialog>
+                    </div>
+
+                    <canvas id="splat-canvas" class="w-100 rounded"
+                        style="max-width:440px; aspect-ratio: 1; cursor: grab; margin-left: auto;
+                        margin-right: auto;"></canvas>
+                </div>
+
+                <div class="splat-carousel position-relative" id="splat-carousel" role="group" aria-relevant="additions text">
+                    <div class="splat-carousel-items">
+                        <div id="splat-carousel-prototype">
+                            <div class="splat-carousel-item">
+                                <img class="card-img" style="user-drag: none;pointer-events: none; user-select:none;" src="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="splat-carousel-buttons">
+                        <button class="splat-carousel-button left">&#8249;</button>
+                        <button class="splat-carousel-button right">&#8250;</button>
+                    </div>
+                </div>
+            </div> -->
+
+
+
+
+            <!-- <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <h3>
+                        Comparisons to other methods
+                    </h3>
+
+                    <p class="text-justify" style="text-align: left;">
+                        Compare the renders and depth maps of our method CAT3D (right) with baseline methods (left). Try selecting different
+                        methods and scenes!
+                    </p>
+
+                    <div id="single-image-compare">
+                        <div class="row m-2">
+                            <div class="col-md-10">
+                                <ul class="nav nav-pills justify-content-center" role="navigation">
+                                    <li class="nav-item">
+                                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"
+                                            style="width: 110px"><strong>Comparison method:</strong></a>
+                                    </li>
+                                    <li class="nav-item method-pill" data-value="realmdreamer"><a class="nav-link active">RealmDreamer <span style="font-size: 10px;"><br>(Single View)</span></a></li>
+                                    <li class="nav-item method-pill" data-value="zero_nvs"><a class="nav-link">ZeroNVS <span style="font-size: 10px;"><br>(Single View)</span></a></li>
+                                    <li class="nav-item method-pill" data-value="image_dream"><a class="nav-link">ImageDream <span style="font-size: 10px;"><br>(Single View)</span></a> </li>
+                                    <li class="nav-item method-pill" data-value="zipnerf"><a class="nav-link">ZipNeRF <span style="font-size: 10px;"><br>(3 View)</span></a></li>
+                                    <li class="nav-item method-pill" data-value="reconfusion"><a class="nav-link">ReconFusion <span style="font-size: 10px;"><br>(3 View)</span></a></li>
+                                </ul>
+                            </div>
+
+                            <div class="btn-group btn-group-sm col-md-2 d-flex align-items-center" style="padding-top: 5px" id="mode-buttons">
+                                <button class="btn btn-primary mode-pill float-right active" data-value="rgb">
+                                    RGB
+                                </button>
+                                <button class="btn btn-primary mode-pill float-right" data-value="depth">
+                                    Depth
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="video-container container position-relative p-0">
+
+                            <video class="video col-6" id="single-comp-left" loop playsinline autoplay muted>
+                            </video><video class="video col-6" id="single-comp-right" loop playsinline autoplay muted>
+                            </video>
+
+                            <div class="overlay position-absolute bg-dark top-0 start-0 text-white p-1 opacity-75"
+                                id="single-comp-label-left">Baseline</div>
+                            <div class="overlay position-absolute bg-dark top-0 start-50 text-white p-1 opacity-75"
+                                id="single-comp-label-right"><img src="img/cat3D.png" style="width: 48px;"></div>
+                        </div>
+
+                        <div class="pill-row scene-pills" id="realmdreamer-pills" role="group" aria-relevant="additions text">
+                            <div class="pill scene-pill" data-value="arcade">
+                                <img class="card-img" src="thumbnails/realmdreamer/arcade.jpg">
+                            </div>
+                            <div class="pill scene-pill" data-value="bathroom2">
+                                <img class="card-img" src="thumbnails/realmdreamer/bathroom2.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="bear">
+                                <img class="card-img" src="thumbnails/realmdreamer/bear.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="bedroom3">
+                                <img class="card-img" src="thumbnails/realmdreamer/bedroom3.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="bust">
+                                <img class="card-img" src="thumbnails/realmdreamer/bust.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="car">
+                                <img class="card-img" src="thumbnails/realmdreamer/car.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="forest">
+                                <img class="card-img" src="thumbnails/realmdreamer/forest.jpg">
+                            </div>
+                            <div class="pill scene-pill" data-value="kitchen">
+                                <img class="card-img" src="thumbnails/realmdreamer/kitchen.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="lighthouse">
+                                <img class="card-img" src="thumbnails/realmdreamer/lighthouse.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="piano">
+                                <img class="card-img" src="thumbnails/realmdreamer/piano.jpg">
+                            </div>
+                            <div class="pill scene-pill" data-value="resolute">
+                                <img class="card-img" src="thumbnails/realmdreamer/resolute.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="steampunk">
+                                <img class="card-img" src="thumbnails/realmdreamer/steampunk.jpg">
+                            </div>
+                            <div class="pill scene-pill" data-value="victorian">
+                                <img class="card-img" src="thumbnails/realmdreamer/victorian.jpg">
+                            </div>
+                        </div>
+
+                        <div class="pill-row scene-pills" id="zero_nvs-pills" role="group" aria-relevant="additions text">
+                            <div class="pill scene-pill" data-value="bicycle">
+                                <img class="card-img" src="thumbnails/zero_nvs/bicycle.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="bonsai">
+                                <img class="card-img" src="thumbnails/zero_nvs/bonsai.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="counter">
+                                <img class="card-img" src="thumbnails/zero_nvs/counter.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="flowers">
+                                <img class="card-img" src="thumbnails/zero_nvs/flowers.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="garden">
+                                <img class="card-img" src="thumbnails/zero_nvs/garden.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="kitchen">
+                                <img class="card-img" src="thumbnails/zero_nvs/kitchen.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="room">
+                                <img class="card-img" src="thumbnails/zero_nvs/room.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="stump">
+                                <img class="card-img" src="thumbnails/zero_nvs/stump.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="treehill">
+                                <img class="card-img" src="thumbnails/zero_nvs/treehill.png">
+                            </div>
+                        </div>
+
+                        <div class="pill-row scene-pills" id="zipnerf-pills" role="group" aria-relevant="additions text">
+                            <div class="pill scene-pill" data-value="bicycle">
+                                <img class="card-img" src="thumbnails/reconfusion/bicycle.png">
+                            </div>
+                        
+                            <div class="pill scene-pill" data-value="bonsai">
+                                <img class="card-img" src="thumbnails/reconfusion/bonsai.png">
+                            </div>
+                        
+                            <div class="pill scene-pill" data-value="counter">
+                                <img class="card-img" src="thumbnails/reconfusion/counter.png">
+                            </div>
+                        
+                            <div class="pill scene-pill" data-value="flowers">
+                                <img class="card-img" src="thumbnails/reconfusion/flowers.png">
+                            </div>
+                        
+                            <div class="pill scene-pill" data-value="garden">
+                                <img class="card-img" src="thumbnails/reconfusion/garden.png">
+                            </div>
+                        
+                            <div class="pill scene-pill" data-value="kitchen">
+                                <img class="card-img" src="thumbnails/reconfusion/kitchen.png">
+                            </div>
+                        
+                            <div class="pill scene-pill" data-value="room">
+                                <img class="card-img" src="thumbnails/reconfusion/room.png">
+                            </div>
+                        
+                            <div class="pill scene-pill" data-value="stump">
+                                <img class="card-img" src="thumbnails/reconfusion/stump.png">
+                            </div>
+                        
+                            <div class="pill scene-pill" data-value="treehill">
+                                <img class="card-img" src="thumbnails/reconfusion/treehill.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="co3d_apple_110_13051_23361">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_apple_110_13051_23361.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_ball_123_14352_28341">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_ball_123_14352_28341.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_bench_167_18175_33897">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_bench_167_18175_33897.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_bench_185_19987_38634">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_bench_185_19987_38634.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_cake_201_21631_44304">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_cake_201_21631_44304.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_donut_198_21296_42378">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_donut_198_21296_42378.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_donut_290_30761_58510">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_donut_290_30761_58510.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_hydrant_134_15451_31119">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_hydrant_134_15451_31119.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_hydrant_147_16374_32167">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_hydrant_147_16374_32167.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_plant_188_20319_36755">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_plant_188_20319_36755.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_plant_188_20360_39345">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_plant_188_20360_39345.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_suitcase_197_21239_42788">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_suitcase_197_21239_42788.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_suitcase_247_26503_52258">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_suitcase_247_26503_52258.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_teddybear_118_13848_27594">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_teddybear_118_13848_27594.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_teddybear_159_17485_33236">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_teddybear_159_17485_33236.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_vase_101_11754_20739">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_vase_101_11754_20739.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_vase_118_13872_29491">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_vase_118_13872_29491.png">
+                            </div>  
+  
+                        </div>
+
+                        <div class="pill-row scene-pills" id="reconfusion-pills" role="group" aria-relevant="additions text">
+                            <div class="pill scene-pill" data-value="bicycle">
+                                <img class="card-img" src="thumbnails/reconfusion/bicycle.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="bonsai">
+                                <img class="card-img" src="thumbnails/reconfusion/bonsai.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="counter">
+                                <img class="card-img" src="thumbnails/reconfusion/counter.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="flowers">
+                                <img class="card-img" src="thumbnails/reconfusion/flowers.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="garden">
+                                <img class="card-img" src="thumbnails/reconfusion/garden.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="kitchen">
+                                <img class="card-img" src="thumbnails/reconfusion/kitchen.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="room">
+                                <img class="card-img" src="thumbnails/reconfusion/room.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="stump">
+                                <img class="card-img" src="thumbnails/reconfusion/stump.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="treehill">
+                                <img class="card-img" src="thumbnails/reconfusion/treehill.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="co3d_apple_110_13051_23361">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_apple_110_13051_23361.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_ball_123_14352_28341">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_ball_123_14352_28341.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_bench_167_18175_33897">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_bench_167_18175_33897.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_bench_185_19987_38634">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_bench_185_19987_38634.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_cake_201_21631_44304">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_cake_201_21631_44304.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_donut_198_21296_42378">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_donut_198_21296_42378.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_donut_290_30761_58510">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_donut_290_30761_58510.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_hydrant_134_15451_31119">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_hydrant_134_15451_31119.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_hydrant_147_16374_32167">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_hydrant_147_16374_32167.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_plant_188_20319_36755">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_plant_188_20319_36755.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_plant_188_20360_39345">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_plant_188_20360_39345.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_suitcase_197_21239_42788">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_suitcase_197_21239_42788.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_suitcase_247_26503_52258">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_suitcase_247_26503_52258.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_teddybear_118_13848_27594">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_teddybear_118_13848_27594.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_teddybear_159_17485_33236">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_teddybear_159_17485_33236.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_vase_101_11754_20739">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_vase_101_11754_20739.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_vase_118_13872_29491">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_vase_118_13872_29491.png">
+                            </div>  
+  
+                        </div>
+
+                        <div class="pill-row scene-pills" id="image_dream-pills" role="group" aria-relevant="additions text">
+                            <div class="pill scene-pill" data-value="bear">
+                                <img class="card-img" src="thumbnails/image_dream/bear.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="corgi">
+                                <img class="card-img" src="thumbnails/image_dream/corgi.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="frog">
+                                <img class="card-img" src="thumbnails/image_dream/frog.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="ghost">
+                                <img class="card-img" src="thumbnails/image_dream/ghost.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="house">
+                                <img class="card-img" src="thumbnails/image_dream/house.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="katana">
+                                <img class="card-img" src="thumbnails/image_dream/katana.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="mech">
+                                <img class="card-img" src="thumbnails/image_dream/mech.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="pig">
+                                <img class="card-img" src="thumbnails/image_dream/pig.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="pile">
+                                <img class="card-img" src="thumbnails/image_dream/pile.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="tank">
+                                <img class="card-img" src="thumbnails/image_dream/tank.png">
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        playbackSpeeds = {
+                            "realmdreamer": [3.0, 1.0],
+                            "zero_nvs": [1.5, 1.0],
+                            "zipnerf": [1.5, 1.0],
+                            "reconfusion": [1.5, 1.0],
+                            "image_dream": [1.5, 1.0],
+                        };
+
+                        aspectRatios = {
+                            "realmdreamer": 1.0,
+                            "zero_nvs": 1.5,
+                            "zipnerf": 1.5,
+                            "reconfusion": 1.5,
+                            "image_dream": 1.0,
+                        }
+
+                        labels = {
+                            "realmdreamer": "RealmDreamer",
+                            "zero_nvs": "ZeroNVS",
+                            "zipnerf": "ZipNeRF (3-view)",
+                            "reconfusion": "ReconFusion (3-view)",
+                            "image_dream": "ImageDream",
+                        }
+
+                        compareDiv = document.querySelector("#single-image-compare")
+                        activeMethod = "realmdreamer"
+                        activeScene = "bear"
+                        activeMode = "rgb"
+
+                        // Select all elements with the class 'method-pill'
+                        const methodPills = compareDiv.querySelectorAll('.method-pill');
+                        const modePillParent = compareDiv.querySelector('#mode-buttons')
+                        const modePills = modePillParent.querySelectorAll('.mode-pill')
+
+                        for (modePill of modePills) {
+                            modePill.addEventListener('click', function () {
+                                activeMode = this.getAttribute('data-value');
+                                updateDisplay();
+                            });
+                        }
+
+
+                        const videoParent = compareDiv.querySelector(".video-container");
+                        const leftVideo = videoParent.querySelector('#single-comp-left')
+                        const leftLabel = videoParent.querySelector("#single-comp-label-left")
+                        const rightVideo = videoParent.querySelector('#single-comp-right')
+                        const scenePillContainers = compareDiv.querySelectorAll(`.scene-pills`);
+
+                        for (methodPill of methodPills) {
+                            const method = methodPill.getAttribute('data-value');
+                            // Select all scene pill containers
+                            const scenePillContainer = compareDiv.querySelector(`#${method}-pills`);
+                            const scenePills = scenePillContainer.querySelectorAll(".scene-pill")
+
+                            for (scenePill of scenePills) {
+                                scenePill.addEventListener('click', function () {
+                                    activeScene = this.getAttribute("data-value")
+                                    console.log(activeScene);
+                                    updateDisplay();
+                                });
+                            }
+
+                            // Attach a click event listener to each pill
+                            methodPill.addEventListener('click', function () {
+                                activeMethod = method
+                                activeMode = "rgb"
+                                const scenePillContainer = compareDiv.querySelector(`#${method}-pills`);
+                                const scenePills = scenePillContainer.querySelectorAll(".scene-pill")
+                                activeScene = scenePills[0].getAttribute("data-value")
+                                updateDisplay();
+                            });
+                        }
+
+                        function updateDisplay() {
+                            if (activeMethod == 'image_dream') {
+                                modePillParent.style.display = 'none';
+                            } else {
+                                modePillParent.style.display = '';
+                            }
+                            // Update active pill
+
+                            methodPills.forEach(p => p.classList.remove('active'));
+                            methodPills.forEach(methodPill => {
+                                if (methodPill.getAttribute('data-value') == activeMethod) {
+                                    methodPill.querySelector('a').classList.add('active');
+                                } else {
+                                    methodPill.querySelector('a').classList.remove('active')
+                                }
+                            });
+
+                            // Update mode pill
+                            for (modePill of modePills) {
+                                if (modePill.getAttribute('data-value') === activeMode) {
+                                    modePill.classList.add('active');
+                                } else {
+                                    modePill.classList.remove('active');
+                                }
+                            }
+
+                            // Show/Hide scene pill containers based on the selected method
+                            scenePillContainers.forEach(container => {
+                                if (container.id === `${activeMethod}-pills`) {
+                                    container.style.display = ''; // Or 'block' depending on your layout
+                                } else {
+                                    container.style.display = 'none';
+                                }
+                            });
+
+                            const scenePillContainer = compareDiv.querySelector(`#${activeMethod}-pills`);
+                            const scenePills = scenePillContainer.querySelectorAll(".scene-pill")
+
+                            for (scenePill of scenePills) {
+                                if (scenePill.getAttribute('data-value') == activeScene) {
+                                    scenePill.classList.add('active');
+                                } else {
+                                    scenePill.classList.remove('active')
+                                }
+                            }
+
+                            var zdist = "";
+                            if (activeMode == "depth") {
+                                zdist = "_zdist";
+                            }
+
+                            // Update video display. This still has a small flash, could double buffer the video like before, but
+                            // as long as the layout stays consistent it really isn't bad.
+                            leftVideo.src = `videos/comparison/${activeMethod}/baseline/${activeScene}${zdist}.webm`
+                            rightVideo.src = `videos/comparison/${activeMethod}/ours/${activeScene}${zdist}.webm`
+
+                            var [lr, rr] = playbackSpeeds[activeMethod];
+                            leftVideo.playbackRate = lr;
+                            rightVideo.playbackRate = rr;
+
+                            videoParent.style.aspectRatio = aspectRatios[activeMethod] * 2.0;
+
+                            console.log(leftLabel)
+                            console.log(leftLabel.innerHtml)
+
+                            leftLabel.innerHTML = labels[activeMethod];
+                        }
+                        // Update initial display
+                        updateDisplay()
+                    </script>
+                </div>
+            </div> -->
+
+            <br>
+            <br>
+            <br>
+            <br>
+
+<!-- 
+            <div class="row justify-content-center">
+                <div class="col-md-5 center text-start">
+                    <label style="display: inline" for="bibtex">
+                        <h4 style="text-align: center">BibTeX </h4>
+                    </label>
+                    <textarea id="bibtex" class="form-control" readonly>
+                        </textarea>
+                </div>
+            </div> -->
+
+
+            <div class="row justify-content-center">
+                <div class="content has-text-justified">
+                    <h4 style="text-align: center">Related Work </h4>
+
+                <p><a href="https://dreamscene360.github.io/">
+                    <b>DreamScene360: Unconstrained Text-to-3D Scene Generation with Panoramic Gaussian Splatting</b></a>.
+                    ECCV 2024.
+                </p>
+                <p><a href="https://ys-imtech.github.io/projects/LayerPano3D/">
+                    <b>LayerPano3D: Layered 3D Panorama for Hyper-Immersive Scene Generation</b>.</a>
+                    SIGGRAPH 2025.
+                </p>
+                <p><a href="https://lukashoel.github.io/text-to-room/">
+                    <b>Text2Room: Extracting Textured 3D Meshes from 2D Text-to-Image Models</b>.</a>
+                    ICCV 2023.
+                </p>
+                <p><a href="https://github.com/TencentARC/InstantMesh">
+                    <b>InstantMesh: Efficient 3D Mesh Generation from a Single Image with Sparse-view Large Reconstruction Models</b>.</a>
+                    ArXiv 2025.
+                </p>
+            </div>
+        </div>
+
+        </main>
+        <footer>
+            <div class="row">
+                <div class="col-md-8 offset-md-2 text-start">
+
+                    <p class="text-justify" style="text-align: left;">
+                        <i>
+                            The website template was borrowed from <a href="https://cat3d.github.io/">Cat3D</a>, thank you very much!
+                        </i>
+                    </p>
+                </div>
+            </div>
+
+        </footer>
+    </div>
+</body>
+
+</html>
+

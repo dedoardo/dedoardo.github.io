@@ -1,6 +1,8 @@
-@article{dominici2025dreamanywhere,
-  title     = {DreamAnywhere: Object-Centric Panoramic 3D Scene Generation},
-  author    = {Dominici, Edoardo Alberto and Hladky, Jozef and Verhoeven, Floor and Radl, Lukas and Deixelberger, Thomas and Ainetter, Stefan and Drescher, Philipp and Hauswiesner, Stefan and Coomans, Arno and Nazzaro, Giacomo and Vardis, Konstantinos and Steinberger, Markus},
-  journal   = {arXiv preprint arXiv:2506.20367},
-  year      = {2025}
+@InProceedings{Dominici_2026_WACV,
+  author = {Dominici, Edoardo A. and Hladký, Jozef and Verhoeven, Floor and Radl, Lukas and Deixelberger, Thomas and Ainetter, Stefan and Drescher, Philipp and Hauswiesner, Stefan and Coomans, Arno and Nazzaro, Giacomo and Vardis, Konstantinos and Steinberger, Markus},
+  title = {DreamAnywhere: Object-Centric Panoramic 3D Scene Generation},
+  booktitle = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+  month = {March},
+  year = {2026},
+  pages = {1-11}
 }

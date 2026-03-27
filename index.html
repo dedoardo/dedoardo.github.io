@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edoardo A. Dominici - Academic Profile</title>
+    <title>Edoardo Dominici</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -154,7 +154,7 @@
                     I am a research engineer at Huawei in Zürich, Switzerland currently working at the intersection of computer graphics and generative models, with a particular focus on image-based scene generation.
                 </p>
                 <p>
-                    Before joining Huawei I worked on production renderers for animated movies: at Animal Logic (then <a href="https://www.linkedin.com/company/netflix-animation/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">Netflix Animation Studios</a>) where I was part of the Rendering R&D team and at <a href="https://www.linkedin.com/company/tangent-animation/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">Tangent Animation</a> on a custom fork of Blender's Cycles. You can find me in the credits of <a href="https://www.imdb.com/title/tt5755238/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline"><em>Leo</em></a>, <a href="https://www.imdb.com/title/tt2560092/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline"><em>The Magician's Elephant</em></a> and <a href="https://www.imdb.com/title/tt8787772/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline"><em>Maya and the Three</em></a>. 
+                    Before joining Huawei I worked on production renderers for animated movies: at Animal Logic (then <a href="https://www.linkedin.com/company/netflix-animation-studios" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">Netflix Animation Studios</a>) where I was part of the Rendering R&D team and at <a href="https://www.linkedin.com/company/tangent-animation/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">Tangent Animation</a> on a custom fork of Blender's Cycles. You can find me in the credits of <a href="https://www.imdb.com/title/tt5755238/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline"><em>Leo</em></a>, <a href="https://www.imdb.com/title/tt2560092/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline"><em>The Magician's Elephant</em></a> and <a href="https://www.imdb.com/title/tt8787772/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline"><em>Maya and the Three</em></a>. 
                 </p>
                 <p>
                     I hold a MSc from the University of British Columbia, where I worked on image vectorization algorithms under the supervision of <a href="https://www.cs.ubc.ca/~sheffa/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">dr. Alla Sheffer</a>. My BSc thesis was on WebGL image retargeting under the supervision of <a href="https://tarini.di.unimi.it/" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">dr. Marco Tarini</a>.
@@ -167,6 +167,47 @@
             <h2 class="text-2xl font-bold text-primary-dark mb-6 border-b-2 border-blue-300 pb-1">Publications</h2>
 
             <div class="space-y-10">
+
+                <!-- GuidedSceneGen -->
+                <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
+                    <div class="w-32 h-24 md:w-36 md:h-28 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-gray-100 pub-img">
+                        <img src="images/guidedscenegen.gif" alt="GuidedSceneGen" class="object-fill w-full h-full">
+                    </div>
+                    <div class="flex-grow">
+                        <p class="text-lg font-bold text-primary-dark mb-0.5 leading-tight">
+                            <a href="https://arxiv.org/abs/2603.13910" class="pub-link">Scene Generation at Absolute Scale: Utilizing Semantic and Geometric Guidance From Text for Accurate and Interpretable 3D Indoor Scene Generation</a>
+                        </p>
+                        <p class="text-sm text-gray-600 mb-1">Stefan Ainetter, Thomas Deixelberger, <strong>Edoardo A. Dominici</strong>, Philipp Drescher, Konstantinos Vardis, Markus Steinberger</p>
+                        <div class="mb-2">
+                            <span class="venue-tag venue-tag-highlight">ArXiv 2026</span>
+                        </div>
+                        <div class="tldr-bubble">
+                            <strong>TL;DR:</strong> We use a metric-scale geometric proxy to drive scene generation through multi-view diffusion models. We introduce a multimodal panorama generation model to generate starting frames from which we efficiently sample trajectories for world exploration and for 3DGS optimization.
+                        </div>
+                        <div class="mt-2 text-xs link-group text-blue-600 font-medium font-sans">
+                            <a href="https://arxiv.org/abs/2603.13910">Arxiv</a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- PixelSync -->
+                <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
+                    <div class="w-32 h-24 md:w-36 md:h-28 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-gray-100 pub-img">
+                        <img src="images/pixelsync.png" alt="PixelSync" class="object-fill w-full h-full">
+                    </div>
+                    <div class="flex-grow">
+                        <p class="text-lg font-bold text-primary-dark mb-0.5 leading-tight">
+                            PixelSync: Enhancing Texture Generation via Explicit Feature Synchronization
+                        </p>
+                        <p class="text-sm text-gray-600 mb-1">Philipp Drescher, <strong>Edoardo A. Dominici</strong>, Giacomo Nazzaro, Konstantinos Vardis, Stefan Hauswiesner, Markus Steinberger</p>
+                        <div class="mb-2">
+                            <span class="venue-tag venue-tag-highlight">I3D 2026</span>
+                        </div>
+                        <div class="tldr-bubble">
+                            <strong>TL;DR:</strong> Training-free multi-view consistent texture synthesis via attention and latent synchronization in diffusion models.
+                        </div>
+                    </div>
+                </article>
 
                 <!-- DreamAnywhere -->
                 <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
@@ -186,6 +227,7 @@
                             <strong>TL;DR:</strong> Modular 3D scene generation from text using 360° panoramas, object-centric decomposition, and hybrid inpainting for immersive navigation and editing.
                         </div>
                         <div class="mt-2 text-xs link-group text-blue-600 font-medium font-sans">
+                            <a href="projects/dreamanywhere/">Project</a>
                             <a href="https://arxiv.org/abs/2506.20367">Arxiv</a>
                             <a href="citations/dreamanywhere.txt" target="_blank">Cite</a>
                         </div>
@@ -203,7 +245,7 @@
                         </p>
                         <p class="text-sm text-gray-600 mb-1">Arno Coomans, Giacomo Nazzaro, <strong>Edoardo A. Dominici</strong>, Christian Döring, Floor Verhoeven, Konstantinos Vardis, Markus Steinberger</p>
                         <div class="mb-2">
-                            <span class="venue-tag venue-tag-highlight">Eurographics 2026</span>
+                            <span class="venue-tag venue-tag-highlight">Eurographics 2026, Computer Graphics Forum</span>
                         </div>
                         <div class="tldr-bubble">
                             <strong>TL;DR:</strong> We introduce an irradiance formulation for neural network-based radiance caching which improves quality and compression compared to existing probe based methods.
@@ -274,7 +316,7 @@
                         </p>
                         <p class="text-sm text-gray-600 mb-1">Polina Zablotskaia, <strong>Edoardo A. Dominici</strong>, Leonid Sigal, Andreas Lehrmann</p>
                         <div class="mb-2">
-                            <span class="venue-tag venue-tag-highlight">Uncertainty in Artificial Intelligence 2021</span>
+                            <span class="venue-tag venue-tag-highlight">UAI 2021, Proceedings of Machine Learning Research</span>
                         </div>
                         <div class="tldr-bubble">
                             <strong>TL;DR:</strong> Formulate a video as a generative image formation model from multiple objects, then introduce spatio-temporal cues in a variational optimization framework through a 2D-LSTM.
