@@ -335,7 +335,7 @@
                 <div class="col-md-8 offset-md-2">
                     <h3 class="section-title" style="text-align: center"> Appearance Decoupling </h3>
                     <p class="text-justify" style="text-align: left; font-size: 0.9rem;">
-                        DINO features are prone to overfitting when naively used for ControlNet training—the model learns to reproduce training domain appearance rather than following structural guidance. We study this by dropping first frame conditioning and relying solely on text prompts. Setting the prompt to "blue" reveals the bias: baseline models ignore the prompt and reconstruct original colors, while our appearance-augmented training significantly reduces domain overfitting.
+                        DINO features are prone to overfitting when naively used for ControlNet training, the model learns to reproduce training domain appearance rather than following structural guidance. We study this by dropping first frame conditioning and relying solely on text prompts. Setting the prompt to "blue" reveals the bias: baseline models ignore the prompt and reconstruct original colors, while our appearance-augmented training significantly reduces domain overfitting.
                     </p>
                     <img src="images/figure1.png" alt="Reconstruction comparison" style="width: 100%; border-radius: 8px; margin-top: 15px;">
                 </div>
@@ -347,7 +347,7 @@
                 <div class="col-md-8 offset-md-2">
                     <h3 class="section-title" style="text-align: center"> Appearance Invariant DINO ControlNet </h3>
                     <p class="text-justify" style="text-align: left; font-size: 0.9rem;">
-                        We train on simple photometric and neural style augmentations, yet the model generalizes to unseen styles and relighting conditions—bounded only by the base model's generative capacity. At inference, a style transferred first frame (via IC Light, InstantStyle, Krea, etc.) anchors appearance while DINO features guide structure. Full finetuning would improve quality, but ControlNets are plug and play: our adapter works with any compatible backbone without retraining the base model.
+                        We train on simple photometric and neural style augmentations, yet the model generalizes to unseen styles and relighting conditions, bounded only by the base model's generative capacity. At inference, a style transferred first frame (via IC Light, InstantStyle, Krea, etc.) anchors appearance while DINO features guide structure. Full finetuning would improve quality, but ControlNets are plug and play: our adapter works with any compatible backbone without retraining the base model.
                     </p>
                     <div class="row" style="margin-top: 15px;">
                         <div class="col-md-6">
@@ -366,7 +366,7 @@
                 <div class="col-md-8 offset-md-2">
                     <h3 class="section-title" style="text-align: center"> Controlled Video Diffusion as Generative Rendering </h3>
                     <p class="text-justify" style="text-align: left; font-size: 0.9rem;">
-                        We explore a range of 3D representations as conditioning sources for video generation. Voxel grids provide coarse but camera-consistent structural priors across views. Untextured mesh renderings capture surface geometry with holes and missing regions handled via visibility masking. Point clouds—whether from LiDAR scans or 3D Gaussian Splatting reconstructions—offer sparse but semantically rich guidance. Using Concerto, we extract DINO-like features directly from these uncolored representations, bypassing the need for RGB textures entirely. Each representation trades off spatial detail for semantic richness: the high dimensionality of foundation features (384 channels) compensates for coarse spatial resolution, enabling photorealistic video generation from geometry alone.
+                        We explore a range of 3D representations as conditioning sources for video generation. Voxel grids provide coarse but camera-consistent structural priors across views. Untextured mesh renderings capture surface geometry with holes and missing regions handled via visibility masking. Point clouds, whether from LiDAR scans or 3D Gaussian Splatting reconstructions, offer sparse but semantically rich guidance. Using Concerto, we extract DINO-like features directly from these uncolored representations, bypassing the need for RGB textures entirely. Each representation trades off spatial detail for semantic richness: the high dimensionality of foundation features (384 channels) compensates for coarse spatial resolution, enabling photorealistic video generation from geometry alone.
                     </p>
                 </div>
             </div>
