@@ -324,7 +324,7 @@
 
             <div class="row" style="margin-top: 20px;">
                 <div class="col-md-8 offset-md-2 rounded" style="text-align: center; padding: 15px; background-color: #d0d5ec;">
-                    <p style="margin: 0; color: rgb(0, 0, 0);"><strong>TL;DR:</strong> A general-purpose DINO-conditioned ControlNet for video diffusion that retains structural and semantic guidance while decoupling appearance, enabling video transfer and video-from-3D generation.</p>
+                    <p style="margin: 0; color: rgb(0, 0, 0);"><strong>TL;DR:</strong> A DINO-conditioned ControlNet for image-to-video diffusion that is appearance invariant offering semantic and structural control, we show that it can be a versatile tool for transfer and generative rendering tasks from 2D or 3D data, offering strong guidance for longer videos despite a low spatial resolution.</p>
                 </div>
             </div>
 
@@ -387,8 +387,8 @@
                         <div class="selector-row" id="dataset-selector">
                             <button class="selector-btn active" data-dataset="transfer">T&T Style Transfer</button>
                             <button class="selector-btn" data-dataset="relighting">T&T Relighting</button>
-                            <button class="selector-btn" data-dataset="vkitti">Virtual KITTI - Weather Transfer</button>
                             <button class="selector-btn" data-dataset="reconstruction">ScanNet++ 3D Reconstruction</button>
+                            <button class="selector-btn" data-dataset="vkitti">Virtual KITTI - Weather Transfer</button>
                         </div>
                         <!-- Scene selector -->
                         <div class="selector-row" id="scene-selector"></div>
