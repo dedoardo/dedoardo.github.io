@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>Control-DINO: Feature Space Conditioning for Controllable Image-to-Video Diffusion</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:image" content="videos/teaser.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Control-DINO: Feature Space Conditioning for Controllable Image-to-Video Diffusion" />
+    <meta property="og:description"
+        content="Feature space conditioning for controllable video diffusion." />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Control-DINO: Feature Space Conditioning for Controllable Image-to-Video Diffusion" />
+    <meta name="twitter:description"
+        content="Feature space conditioning for controllable video diffusion." />
+    <meta name="twitter:image" content="videos/teaser.png" />
+
+    <link rel="icon" href="favicon.ico">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8ZERS5BVPS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-8ZERS5BVPS');
+    </script>   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+        </script>
+    <script defer src="js/fontawesome.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+    <script src="js/app.js"></script>
+    <script src="js/synced_video_selector.js"></script>
+
+    <script type="module">
+        import { createSplatView, setSplatScene, setupCarousel } from "./js/splats.js"
+        setupCarousel(createSplatView("splat-picker"), document.querySelector("#splat-carousel"));
+    </script>
+    <style>
+        .final-element {
+            white-space: nowrap;
+        }
+        .author {
+            white-space: nowrap;
+        }
+        .video-container {
+            position: relative;
+            cursor: pointer;
+        }
+        .video-container video {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .play-overlay::after {
+            content: '';
+            border-style: solid;
+            border-width: 12px 0 12px 20px;
+            border-color: transparent transparent transparent white;
+            margin-left: 4px;
+        }
+        .video-container:hover .play-overlay {
+            opacity: 1;
+        }
+
+        /* Video Inspector */
+        .video-inspector {
+            margin: 0 auto;
+        }
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, auto);
+            gap: 8px;
+        }
+        .method-cell {
+            position: relative;
+        }
+        .method-cell img {
+            width: 100%;
+            border-radius: 6px;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+        }
+        .method-label {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .method-cell .na-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        .frame-slider {
+            width: 100%;
+            margin-top: 20px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            background: #ddd;
+            border-radius: 4px;
+            outline: none;
+        }
+        .frame-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #333;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .frame-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #333;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+        .frame-label {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .section-divider {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 40px auto;
+            width: 60%;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        .selector-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .selector-btn {
+            padding: 8px 20px;
+            border: 2px solid #333;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .selector-btn:hover {
+            background: #f0f0f0;
+        }
+        .selector-btn.active {
+            background: #333;
+            color: white;
+        }
+        .scene-btn {
+            padding: 6px 16px;
+            font-size: 0.8rem;
+        }
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .slider-row .frame-slider {
+            flex: 1;
+            margin-top: 0;
+        }
+        .play-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: #333;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .play-btn:hover {
+            background: #555;
+        }
+        .play-btn .play-icon {
+            border-style: solid;
+            border-width: 8px 0 8px 14px;
+            border-color: transparent transparent transparent white;
+            margin-left: 3px;
+        }
+        .play-btn .pause-icon {
+            display: flex;
+            gap: 4px;
+        }
+        .play-btn .pause-icon span {
+            width: 4px;
+            height: 14px;
+            background: white;
+        }
+        .video-container.playing .play-overlay {
+            opacity: 0 !important;
+        }
+    </style>
+</head>
+
+<body style="padding: 5%; padding-top: min(15px, 5%); padding-bottom: min(5px, 5%); width: 100%">
+    <div class="container-lg text-center" style="max-width: 800px; margin: auto;" id="main">
+        <header role="banner">
+            <!-- <div class="container" id="main"> -->
+            <div class="row">
+                <h2 class="col-md-12 text-center">
+                    <b>Control-DINO:</b> Feature Space Conditioning for Controllable Image-to-Video Diffusion</br>
+                </h2>
+            </div>
+
+            <!-- Authors -->
+            <div class="row justify-content-center" style="margin-top: 10px;">
+                <div class="col-md-10 text-center" style="font-size: 1rem;">
+                    <span class="author"><a href="https://dedoardo.github.io">Edoardo A. Dominici</a><sup>1*</sup></span>,
+                    <span class="author"><a href="https://scholar.google.com/citations?user=q3KITmQAAAAJ">Thomas Deixelberger</a><sup>2,3*</sup></span>,
+                    <span class="author"><a href="https://kostasvardis.com/">Konstantinos Vardis</a><sup>1</sup></span>,
+                    <span class="author"><a href="https://www.markussteinberger.net/">Markus Steinberger</a><sup>2,3</sup></span>
+                </div>
+                <div class="col-md-10 text-center" style="font-size: 0.8rem; color: #888; margin-top: 4px;">
+                    <sup>*</sup>Equal contribution
+                </div>
+            </div>
+
+            <!-- Affiliations -->
+            <div class="row justify-content-center" style="margin-top: 8px;">
+                <div class="col-md-10 text-center" style="font-size: 0.9rem; color: #555;">
+                    Huawei Technologies <sup>1</sup>Switzerland, <sup>2</sup>Austria &nbsp;&nbsp;
+                    <sup>3</sup>Graz University of Technology
+                </div>
+            </div>
+
+            <!-- Logos -->
+            <div class="row justify-content-center" style="margin-top: 15px;">
+                <div class="col-auto text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1275.5 287" width="120" style="margin-right: 30px;"><path fill="#24272A" d="M696.2 91.7h28.4v79c0 40.1-22.1 63.1-60.6 63.1-38.1 0-60-22.6-60-62v-80h28.4v79.1c0 23.4 11.5 35.9 32 35.9s31.8-12.2 31.8-34.9V91.7zm-160 56.4H472V91.7h-28.4v140H472v-56.9h64.1v56.9h28.4v-140h-28.4v56.4zm711.2-56.4v139.8h28V91.7h-28zm-111.5 79.7h51.7v-25.5h-51.7v-28.7h75V91.8h-103v139.8h105.7v-25.5h-77.7v-34.7zm-111.4 16.5l-31.8-96.3h-23.2l-31.8 96.3-30.9-96.2h-30.2l48.8 139.9h23.5l31.8-91.9 31.8 91.9h23.7l48.7-139.9h-29.5l-30.9 96.2zM826.1 92.5l61.1 139.1h-29.8l-12.6-29.1h-64.1l-.9 2-11.8 27.1h-29l61.7-139.9h24.8l.6.8zm6.8 81.4L812.7 127l-20.1 46.9-1.4 3.2h43l-1.3-3.2z"/><path fill="#CE0E2D" d="M164 216.8c.4-.3.5-.9.3-1.4A839.8 839.8 0 0061.8 49s-32.2 30.6-29.9 61.3a54 54 0 0018.7 36.9c28.1 27.4 96.1 62 111.9 69.9.5.2 1.1.1 1.5-.3m-10.5 23.4c-.2-.6-.8-1-1.5-1l-113.2 3.9c12.3 21.9 33 38.9 54.5 33.7 14.9-3.7 48.5-27.2 59.6-35.2.9-.7.6-1.3.6-1.4m1.7-10.1c.6-.9-.4-1.7-.4-1.7-49.7-33.6-146.1-85.2-146.1-85.2a67 67 0 0060.4 87.7c1.7.3 67.3 0 84.9-.1.5-.1.9-.3 1.2-.7m7.5-230c-4.9.4-18.2 3.5-18.2 3.5-30 7.7-37.1 35-37.1 35-5.5 17.1.1 36 .1 36 10 44.4 59.2 117.5 69.8 132.8.7.8 1.3.5 1.3.5.6-.2 1.1-.7 1.1-1.4C196.1 43.3 162.7.1 162.7.1m37.5 207.6c.6.2 1.3 0 1.6-.6 10.9-15.7 59.8-88.4 69.8-132.6 0 0 5.4-21.4.2-36 0 0-7.4-27.7-37.4-35 0 0-8.6-2.2-17.8-3.5 0 0-33.6 43.2-17.2 206.4-.1.6.3 1.1.8 1.3m26.8 31.6a2 2 0 00-1.3.9c-.1.6 0 1.1.4 1.5 10.8 7.8 43.7 30.8 59.5 35.2 0 0 29.3 10 54.7-33.7L227 239.3zM370.5 143s-96.2 51.7-146 85.3c-.5.4-.8 1-.6 1.6 0 0 .5.9 1.2.9 17.8 0 85.2.1 87-.2 6.7-.5 13.3-2 19.5-4.5 0 0 24-7.6 36.4-34.9 0 0 11.1-22.2 2.5-48.2m-155.1 73.8c.4.3 1 .4 1.5.1 16.2-8.1 83.7-42.4 111.6-69.7 0 0 17.7-14.2 18.6-37.1 2-31.7-29.9-61.1-29.9-61.1s-59 71.5-102.3 166a2 2 0 00.5 1.8"/></svg>
+                    <img src="images/tugraz.png" alt="TU Graz" height="40">
+                </div>
+            </div>
+
+            <!-- Links -->
+            <div class="row justify-content-center" style="margin-top: 15px; margin-bottom: 10px;">
+                <div class="col-auto">
+                    <a href="#" class="btn btn-dark btn-sm" style="border-radius: 20px; margin: 5px;">
+                        <i class="fas fa-file-pdf"></i> Paper
+                    </a>
+                    <a href="https://github.com/d3ixi/ControlDINO" class="btn btn-dark btn-sm" style="border-radius: 20px; margin: 5px;">
+                        <i class="fas fa-code"></i> Code
+                    </a>
+                </div>
+            </div>
+        <br>
+
+            </div>
+        </header>
+
+        <main role="main">
+            <!-- <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <video id="co3d-grid" poster="img/teaser_frame.jpg" width="100%" autoplay loop muted controls playsinline>
+					  <source src="videos/video.mp4" type="video/mp4"></source>
+                    </video>
+                </div>
+            </div> -->
+
+            <div class="row" style="margin-top: 20px;">
+                <div class="col-md-8 offset-md-2 rounded" style="text-align: center; padding: 15px; background-color: #d0d5ec;">
+                    <p style="margin: 0; color: rgb(0, 0, 0);"><strong>TL;DR:</strong> A general-purpose DINO-conditioned ControlNet for video diffusion that retains structural and semantic guidance while decoupling appearance, enabling video transfer and video-from-3D generation.</p>
+                </div>
+            </div>
+
+            <br>
+
+            <!-- Appearance Decoupling -->
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <h3 class="section-title" style="text-align: center"> Appearance Decoupling </h3>
+                    <p class="text-justify" style="text-align: left; font-size: 0.9rem;">
+                        DINO features are prone to overfitting when naively used for ControlNet training—the model learns to reproduce training domain appearance rather than following structural guidance. We study this by dropping first-frame conditioning and relying solely on text prompts. Setting the prompt to "blue" reveals the bias: baseline models ignore the prompt and reconstruct original colors, while our appearance-augmented training significantly reduces domain overfitting.
+                    </p>
+                    <img src="images/figure1.png" alt="Reconstruction comparison" style="width: 100%; border-radius: 8px; margin-top: 15px;">
+                </div>
+            </div>
+            <hr class="section-divider">
+
+            <!-- Appearance Invariant DINO ControlNet -->
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <h3 class="section-title" style="text-align: center"> Appearance Invariant DINO ControlNet </h3>
+                    <p class="text-justify" style="text-align: left; font-size: 0.9rem;">
+                        We train on simple photometric and neural style augmentations, yet the model generalizes to unseen styles and relighting conditions—bounded only by the base model's generative capacity. At inference, a style-transferred first frame (via IC-Light, InstantStyle, etc.) anchors appearance while DINO features guide structure. Full finetuning would improve quality, but ControlNets are plug-and-play: our adapter works with any compatible backbone without retraining the base model.
+                    </p>
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="col-md-6">
+                            <img src="images/training.png" alt="Training" style="width: 100%; border-radius: 8px;">
+                        </div>
+                        <div class="col-md-6">
+                            <img src="images/inference.png" alt="Inference" style="width: 100%; border-radius: 8px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="section-divider">
+
+            <!-- 3D Data Sources -->
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <h3 class="section-title" style="text-align: center"> 3D Data Sources </h3>
+                    <p class="text-justify" style="text-align: left; font-size: 0.9rem;">
+                        We explore a range of 3D representations as conditioning sources for video generation. Voxel grids provide coarse but camera-consistent structural priors across views. Untextured mesh renderings capture surface geometry with holes and missing regions handled via visibility masking. Point clouds—whether from LiDAR scans or 3D Gaussian Splatting reconstructions—offer sparse but semantically rich guidance. Using Concerto, we extract DINO-like features directly from these uncolored representations, bypassing the need for RGB textures entirely. Each representation trades off spatial detail for semantic richness: the high dimensionality of foundation features (384 channels) compensates for coarse spatial resolution, enabling photorealistic video generation from geometry alone.
+                    </p>
+                </div>
+            </div>
+            <hr class="section-divider">
+
+            <!-- Results -->
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <h3 class="section-title" style="text-align: center"> Interactive Results </h3>
+                </div>
+            </div>
+
+            <!-- Video Inspector -->
+            <div class="row" style="margin-top: 20px;">
+                <div class="col-md-8 offset-md-2">
+                    <div class="video-inspector">
+                        <!-- Dataset selector -->
+                        <div class="selector-row" id="dataset-selector">
+                            <button class="selector-btn active" data-dataset="transfer">T&T Style Transfer</button>
+                            <button class="selector-btn" data-dataset="relighting">T&T Relighting</button>
+                            <button class="selector-btn" data-dataset="vkitti">Virtual KITTI - Weather Transfer</button>
+                            <button class="selector-btn" data-dataset="reconstruction">ScanNet++ 3D Reconstruction</button>
+                        </div>
+                        <!-- Scene selector -->
+                        <div class="selector-row" id="scene-selector"></div>
+                        <!-- Method grid -->
+                        <div class="method-grid" id="method-grid"></div>
+                        <div class="slider-row">
+                            <button class="play-btn" id="play-btn">
+                                <div class="play-icon"></div>
+                            </button>
+                            <input type="range" class="frame-slider" id="frame-slider" min="0" max="48" value="0">
+                        </div>
+                        <div class="frame-label">Frame: <span id="frame-number">0</span> / 48</div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                (function() {
+                    const slider = document.getElementById('frame-slider');
+                    const frameLabel = document.getElementById('frame-number');
+                    const playBtn = document.getElementById('play-btn');
+                    const methodGrid = document.getElementById('method-grid');
+                    const sceneSelector = document.getElementById('scene-selector');
+                    const datasetBtns = document.querySelectorAll('#dataset-selector .selector-btn');
+
+                    let currentDataset = 'transfer';
+                    let currentScene = '';
+                    let isPlaying = false;
+                    let playInterval = null;
+
+                    // Dataset configurations
+                    const datasets = {
+                        transfer: {
+                            scenes: [
+                                { id: 'mondrian_composition_Barn', label: 'Mondrian' },
+                                { id: 'hokusai_great_wave_Barn', label: 'Hokusai' },
+                                { id: 'kandinsky_composition7_Barn', label: 'Kandinsky' },
+                                { id: 'vangogh_starry_night_Barn', label: 'Van Gogh' },
+                                { id: 'monet_impression_Barn', label: 'Monet' }
+                            ],
+                            methods: [
+                                { id: 'AnyV2V', label: 'AnyV2V', row: 'output', maxFrame: 15 },
+                                { id: 'WanDepth', label: 'Wan Depth', row: 'output' },
+                                { id: 'WanCanny', label: 'Wan Canny', row: 'output' },
+                                { id: 'ControlDINO', label: 'Ours', row: 'output' },
+                                { id: 'ControlDINO', label: 'First Frame', row: 'cond', static: true },
+                                { id: 'cond_depth', label: 'Depth', row: 'cond' },
+                                { id: 'cond_canny', label: 'Edges', row: 'cond' },
+                                { id: 'cond_dino', label: 'DINO', row: 'cond' }
+                            ],
+                            cols: 4
+                        },
+                        relighting: {
+                            scenes: [
+                                { id: 'relight_sunset_left_Barn', label: 'Sunset' },
+                                { id: 'relight_bright_daylight_Courthouse', label: 'Daylight' },
+                                { id: 'relight_cool_moonlight_Church', label: 'Moonlight' },
+                                { id: 'relight_dramatic_uplight_Family', label: 'Dramatic' },
+                                { id: 'relight_soft_studio_Francis', label: 'Studio' }
+                            ],
+                            methods: [
+                                { id: 'AnyV2V', label: 'AnyV2V', row: 'output', maxFrame: 15 },
+                                { id: 'WanDepth', label: 'Wan Depth', row: 'output' },
+                                { id: 'WanCanny', label: 'Wan Canny', row: 'output' },
+                                { id: 'ControlDINO', label: 'Ours', row: 'output' },
+                                { id: 'ControlDINO', label: 'First Frame', row: 'cond', static: true },
+                                { id: 'cond_depth', label: 'Depth', row: 'cond' },
+                                { id: 'cond_canny', label: 'Edges', row: 'cond' },
+                                { id: 'cond_dino', label: 'DINO', row: 'cond' }
+                            ],
+                            cols: 4
+                        },
+                        vkitti: {
+                            scenes: [
+                                { id: 'vkitti_foggy_Scene01_00000', label: 'Foggy' },
+                                { id: 'vkitti_night_Scene20_00000', label: 'Night' },
+                                { id: 'vkitti_rainy_Scene06_00000', label: 'Rainy' },
+                                { id: 'vkitti_snowy_Scene18_00000', label: 'Snowy' },
+                                { id: 'vkitti_sunset_Scene02_00000', label: 'Sunset' }
+                            ],
+                            methods: [
+                                { id: 'Input', label: 'Input', row: 'output' },
+                                { id: 'ControlDINO', label: 'Ours', row: 'output' }
+                            ],
+                            cols: 2
+                        },
+                        reconstruction: {
+                            scenes: [
+                                { id: 'scannetpp_00000', label: 'Scene 1' },
+                                { id: 'scannetpp_00001', label: 'Scene 2' },
+                                { id: 'scannetpp_00002', label: 'Scene 3' },
+                                { id: 'scannetpp_00003', label: 'Scene 4' }
+                            ],
+                            methods: [
+                                { id: '2D', label: '2D', row: 'output' },
+                                { id: 'Concerto', label: 'Concerto', row: 'output' },
+                                { id: 'Points', label: '3DGS', row: 'output' },
+                                { id: 'Voxels', label: 'Voxels', row: 'output' }
+                            ],
+                            cols: 4
+                        }
+                    };
+
+                    function buildSceneSelector() {
+                        const config = datasets[currentDataset];
+                        sceneSelector.innerHTML = '';
+                        config.scenes.forEach((scene, i) => {
+                            const btn = document.createElement('button');
+                            btn.className = 'selector-btn scene-btn' + (i === 0 ? ' active' : '');
+                            btn.dataset.scene = scene.id;
+                            btn.textContent = scene.label;
+                            btn.addEventListener('click', function() {
+                                sceneSelector.querySelectorAll('.selector-btn').forEach(b => b.classList.remove('active'));
+                                this.classList.add('active');
+                                currentScene = this.dataset.scene;
+                                updateImages();
+                            });
+                            sceneSelector.appendChild(btn);
+                        });
+                        currentScene = config.scenes[0].id;
+                    }
+
+                    function buildMethodGrid() {
+                        const config = datasets[currentDataset];
+                        methodGrid.innerHTML = '';
+                        methodGrid.style.gridTemplateColumns = `repeat(${config.cols}, 1fr)`;
+
+                        config.methods.forEach(method => {
+                            const cell = document.createElement('div');
+                            cell.className = 'method-cell';
+
+                            const img = document.createElement('img');
+                            img.dataset.method = method.id;
+                            img.dataset.row = method.row;
+                            if (method.static) img.dataset.static = 'true';
+                            if (method.maxFrame) img.dataset.maxFrame = method.maxFrame;
+                            img.alt = method.label;
+
+                            // Handle missing images
+                            img.onerror = function() {
+                                this.style.display = 'none';
+                                let placeholder = cell.querySelector('.na-placeholder');
+                                if (!placeholder) {
+                                    placeholder = document.createElement('div');
+                                    placeholder.className = 'na-placeholder';
+                                    placeholder.textContent = 'N/A';
+                                    cell.insertBefore(placeholder, cell.firstChild);
+                                }
+                                placeholder.style.display = 'flex';
+                            };
+                            img.onload = function() {
+                                this.style.display = 'block';
+                                const placeholder = cell.querySelector('.na-placeholder');
+                                if (placeholder) placeholder.style.display = 'none';
+                            };
+
+                            const label = document.createElement('div');
+                            label.className = 'method-label';
+                            label.textContent = method.label;
+
+                            cell.appendChild(img);
+                            cell.appendChild(label);
+                            methodGrid.appendChild(cell);
+                        });
+                    }
+
+                    function updateImages() {
+                        const frameIndex = parseInt(slider.value);
+                        frameLabel.textContent = frameIndex;
+
+                        const images = methodGrid.querySelectorAll('img');
+                        images.forEach(img => {
+                            const method = img.dataset.method;
+                            const isStatic = img.dataset.static === 'true';
+                            const maxFrame = img.dataset.maxFrame ? parseInt(img.dataset.maxFrame) : 48;
+
+                            let frame = isStatic ? 0 : Math.min(frameIndex, maxFrame);
+                            const paddedFrame = String(frame).padStart(3, '0');
+                            img.src = `images/inspector/${currentDataset}/${currentScene}/${method}/frame_${paddedFrame}.png`;
+                        });
+                    }
+
+                    function setPlayIcon() {
+                        playBtn.innerHTML = '<div class="play-icon"></div>';
+                    }
+
+                    function setPauseIcon() {
+                        playBtn.innerHTML = '<div class="pause-icon"><span></span><span></span></div>';
+                    }
+
+                    function stopPlaying() {
+                        if (playInterval) {
+                            clearInterval(playInterval);
+                            playInterval = null;
+                        }
+                        isPlaying = false;
+                        setPlayIcon();
+                    }
+
+                    function startPlaying() {
+                        isPlaying = true;
+                        setPauseIcon();
+                        playInterval = setInterval(() => {
+                            let frame = parseInt(slider.value) + 1;
+                            if (frame > 48) frame = 0;
+                            slider.value = frame;
+                            updateImages();
+                        }, 100);
+                    }
+
+                    playBtn.addEventListener('click', function() {
+                        if (isPlaying) {
+                            stopPlaying();
+                        } else {
+                            startPlaying();
+                        }
+                    });
+
+                    slider.addEventListener('input', function() {
+                        stopPlaying();
+                        updateImages();
+                    });
+
+                    datasetBtns.forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            datasetBtns.forEach(b => b.classList.remove('active'));
+                            this.classList.add('active');
+                            currentDataset = this.dataset.dataset;
+                            slider.value = 0;
+                            buildSceneSelector();
+                            buildMethodGrid();
+                            updateImages();
+                        });
+                    });
+
+                    // Initialize
+                    buildSceneSelector();
+                    buildMethodGrid();
+                    updateImages();
+                })();
+            </script>
+            <hr class="section-divider">
+
+            <!-- Additional Results -->
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <h3 class="section-title" style="text-align: center"> Additional Results: Video Grid </h3>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-10 col-md-8 mb-4">
+                    <div class="video-container" onclick="toggleVideo(this)">
+                        <video loop muted playsinline>
+                            <source src="videos/mixed_sources_grid.mp4" type="video/mp4">
+                        </video>
+                        <div class="play-overlay"></div>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <script>
+                function toggleVideo(container) {
+                    const video = container.querySelector('video');
+                    if (video.paused) {
+                        video.play();
+                        container.classList.add('playing');
+                    } else {
+                        video.pause();
+                        container.classList.remove('playing');
+                    }
+                }
+            </script>
+
+            <!-- <div class="row col-md-8 offset-md-2 rounded card" style="background-color: #d0d5ec;">
+                <br>
+                <h2 style="text-align: center;">Interactive Results</h2>
+                <div class="text-center" id="splat-picker">
+                    <div id="progress-container">
+                        <dialog open id="progress-dialog">
+                            <label for="progress-indicator">Loading model...</label>
+                            <progress max="100" id="progress-indicator"></progress>
+                        </dialog>
+                    </div>
+
+                    <canvas id="splat-canvas" class="w-100 rounded"
+                        style="max-width:440px; aspect-ratio: 1; cursor: grab; margin-left: auto;
+                        margin-right: auto;"></canvas>
+                </div>
+
+                <div class="splat-carousel position-relative" id="splat-carousel" role="group" aria-relevant="additions text">
+                    <div class="splat-carousel-items">
+                        <div id="splat-carousel-prototype">
+                            <div class="splat-carousel-item">
+                                <img class="card-img" style="user-drag: none;pointer-events: none; user-select:none;" src="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="splat-carousel-buttons">
+                        <button class="splat-carousel-button left">&#8249;</button>
+                        <button class="splat-carousel-button right">&#8250;</button>
+                    </div>
+                </div>
+            </div> -->
+
+
+
+
+            <!-- <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <h3>
+                        Comparisons to other methods
+                    </h3>
+
+                    <p class="text-justify" style="text-align: left;">
+                        Compare the renders and depth maps of our method CAT3D (right) with baseline methods (left). Try selecting different
+                        methods and scenes!
+                    </p>
+
+                    <div id="single-image-compare">
+                        <div class="row m-2">
+                            <div class="col-md-10">
+                                <ul class="nav nav-pills justify-content-center" role="navigation">
+                                    <li class="nav-item">
+                                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"
+                                            style="width: 110px"><strong>Comparison method:</strong></a>
+                                    </li>
+                                    <li class="nav-item method-pill" data-value="realmdreamer"><a class="nav-link active">RealmDreamer <span style="font-size: 10px;"><br>(Single View)</span></a></li>
+                                    <li class="nav-item method-pill" data-value="zero_nvs"><a class="nav-link">ZeroNVS <span style="font-size: 10px;"><br>(Single View)</span></a></li>
+                                    <li class="nav-item method-pill" data-value="image_dream"><a class="nav-link">ImageDream <span style="font-size: 10px;"><br>(Single View)</span></a> </li>
+                                    <li class="nav-item method-pill" data-value="zipnerf"><a class="nav-link">ZipNeRF <span style="font-size: 10px;"><br>(3 View)</span></a></li>
+                                    <li class="nav-item method-pill" data-value="reconfusion"><a class="nav-link">ReconFusion <span style="font-size: 10px;"><br>(3 View)</span></a></li>
+                                </ul>
+                            </div>
+
+                            <div class="btn-group btn-group-sm col-md-2 d-flex align-items-center" style="padding-top: 5px" id="mode-buttons">
+                                <button class="btn btn-primary mode-pill float-right active" data-value="rgb">
+                                    RGB
+                                </button>
+                                <button class="btn btn-primary mode-pill float-right" data-value="depth">
+                                    Depth
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="video-container container position-relative p-0">
+
+                            <video class="video col-6" id="single-comp-left" loop playsinline autoplay muted>
+                            </video><video class="video col-6" id="single-comp-right" loop playsinline autoplay muted>
+                            </video>
+
+                            <div class="overlay position-absolute bg-dark top-0 start-0 text-white p-1 opacity-75"
+                                id="single-comp-label-left">Baseline</div>
+                            <div class="overlay position-absolute bg-dark top-0 start-50 text-white p-1 opacity-75"
+                                id="single-comp-label-right"><img src="img/cat3D.png" style="width: 48px;"></div>
+                        </div>
+
+                        <div class="pill-row scene-pills" id="realmdreamer-pills" role="group" aria-relevant="additions text">
+                            <div class="pill scene-pill" data-value="arcade">
+                                <img class="card-img" src="thumbnails/realmdreamer/arcade.jpg">
+                            </div>
+                            <div class="pill scene-pill" data-value="bathroom2">
+                                <img class="card-img" src="thumbnails/realmdreamer/bathroom2.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="bear">
+                                <img class="card-img" src="thumbnails/realmdreamer/bear.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="bedroom3">
+                                <img class="card-img" src="thumbnails/realmdreamer/bedroom3.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="bust">
+                                <img class="card-img" src="thumbnails/realmdreamer/bust.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="car">
+                                <img class="card-img" src="thumbnails/realmdreamer/car.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="forest">
+                                <img class="card-img" src="thumbnails/realmdreamer/forest.jpg">
+                            </div>
+                            <div class="pill scene-pill" data-value="kitchen">
+                                <img class="card-img" src="thumbnails/realmdreamer/kitchen.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="lighthouse">
+                                <img class="card-img" src="thumbnails/realmdreamer/lighthouse.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="piano">
+                                <img class="card-img" src="thumbnails/realmdreamer/piano.jpg">
+                            </div>
+                            <div class="pill scene-pill" data-value="resolute">
+                                <img class="card-img" src="thumbnails/realmdreamer/resolute.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="steampunk">
+                                <img class="card-img" src="thumbnails/realmdreamer/steampunk.jpg">
+                            </div>
+                            <div class="pill scene-pill" data-value="victorian">
+                                <img class="card-img" src="thumbnails/realmdreamer/victorian.jpg">
+                            </div>
+                        </div>
+
+                        <div class="pill-row scene-pills" id="zero_nvs-pills" role="group" aria-relevant="additions text">
+                            <div class="pill scene-pill" data-value="bicycle">
+                                <img class="card-img" src="thumbnails/zero_nvs/bicycle.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="bonsai">
+                                <img class="card-img" src="thumbnails/zero_nvs/bonsai.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="counter">
+                                <img class="card-img" src="thumbnails/zero_nvs/counter.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="flowers">
+                                <img class="card-img" src="thumbnails/zero_nvs/flowers.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="garden">
+                                <img class="card-img" src="thumbnails/zero_nvs/garden.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="kitchen">
+                                <img class="card-img" src="thumbnails/zero_nvs/kitchen.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="room">
+                                <img class="card-img" src="thumbnails/zero_nvs/room.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="stump">
+                                <img class="card-img" src="thumbnails/zero_nvs/stump.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="treehill">
+                                <img class="card-img" src="thumbnails/zero_nvs/treehill.png">
+                            </div>
+                        </div>
+
+                        <div class="pill-row scene-pills" id="zipnerf-pills" role="group" aria-relevant="additions text">
+                            <div class="pill scene-pill" data-value="bicycle">
+                                <img class="card-img" src="thumbnails/reconfusion/bicycle.png">
+                            </div>
+                        
+                            <div class="pill scene-pill" data-value="bonsai">
+                                <img class="card-img" src="thumbnails/reconfusion/bonsai.png">
+                            </div>
+                        
+                            <div class="pill scene-pill" data-value="counter">
+                                <img class="card-img" src="thumbnails/reconfusion/counter.png">
+                            </div>
+                        
+                            <div class="pill scene-pill" data-value="flowers">
+                                <img class="card-img" src="thumbnails/reconfusion/flowers.png">
+                            </div>
+                        
+                            <div class="pill scene-pill" data-value="garden">
+                                <img class="card-img" src="thumbnails/reconfusion/garden.png">
+                            </div>
+                        
+                            <div class="pill scene-pill" data-value="kitchen">
+                                <img class="card-img" src="thumbnails/reconfusion/kitchen.png">
+                            </div>
+                        
+                            <div class="pill scene-pill" data-value="room">
+                                <img class="card-img" src="thumbnails/reconfusion/room.png">
+                            </div>
+                        
+                            <div class="pill scene-pill" data-value="stump">
+                                <img class="card-img" src="thumbnails/reconfusion/stump.png">
+                            </div>
+                        
+                            <div class="pill scene-pill" data-value="treehill">
+                                <img class="card-img" src="thumbnails/reconfusion/treehill.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="co3d_apple_110_13051_23361">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_apple_110_13051_23361.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_ball_123_14352_28341">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_ball_123_14352_28341.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_bench_167_18175_33897">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_bench_167_18175_33897.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_bench_185_19987_38634">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_bench_185_19987_38634.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_cake_201_21631_44304">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_cake_201_21631_44304.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_donut_198_21296_42378">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_donut_198_21296_42378.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_donut_290_30761_58510">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_donut_290_30761_58510.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_hydrant_134_15451_31119">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_hydrant_134_15451_31119.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_hydrant_147_16374_32167">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_hydrant_147_16374_32167.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_plant_188_20319_36755">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_plant_188_20319_36755.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_plant_188_20360_39345">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_plant_188_20360_39345.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_suitcase_197_21239_42788">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_suitcase_197_21239_42788.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_suitcase_247_26503_52258">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_suitcase_247_26503_52258.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_teddybear_118_13848_27594">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_teddybear_118_13848_27594.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_teddybear_159_17485_33236">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_teddybear_159_17485_33236.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_vase_101_11754_20739">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_vase_101_11754_20739.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_vase_118_13872_29491">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_vase_118_13872_29491.png">
+                            </div>  
+  
+                        </div>
+
+                        <div class="pill-row scene-pills" id="reconfusion-pills" role="group" aria-relevant="additions text">
+                            <div class="pill scene-pill" data-value="bicycle">
+                                <img class="card-img" src="thumbnails/reconfusion/bicycle.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="bonsai">
+                                <img class="card-img" src="thumbnails/reconfusion/bonsai.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="counter">
+                                <img class="card-img" src="thumbnails/reconfusion/counter.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="flowers">
+                                <img class="card-img" src="thumbnails/reconfusion/flowers.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="garden">
+                                <img class="card-img" src="thumbnails/reconfusion/garden.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="kitchen">
+                                <img class="card-img" src="thumbnails/reconfusion/kitchen.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="room">
+                                <img class="card-img" src="thumbnails/reconfusion/room.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="stump">
+                                <img class="card-img" src="thumbnails/reconfusion/stump.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="treehill">
+                                <img class="card-img" src="thumbnails/reconfusion/treehill.png">
+                            </div>
+
+                            <div class="pill scene-pill" data-value="co3d_apple_110_13051_23361">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_apple_110_13051_23361.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_ball_123_14352_28341">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_ball_123_14352_28341.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_bench_167_18175_33897">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_bench_167_18175_33897.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_bench_185_19987_38634">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_bench_185_19987_38634.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_cake_201_21631_44304">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_cake_201_21631_44304.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_donut_198_21296_42378">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_donut_198_21296_42378.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_donut_290_30761_58510">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_donut_290_30761_58510.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_hydrant_134_15451_31119">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_hydrant_134_15451_31119.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_hydrant_147_16374_32167">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_hydrant_147_16374_32167.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_plant_188_20319_36755">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_plant_188_20319_36755.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_plant_188_20360_39345">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_plant_188_20360_39345.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_suitcase_197_21239_42788">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_suitcase_197_21239_42788.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_suitcase_247_26503_52258">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_suitcase_247_26503_52258.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_teddybear_118_13848_27594">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_teddybear_118_13848_27594.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_teddybear_159_17485_33236">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_teddybear_159_17485_33236.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_vase_101_11754_20739">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_vase_101_11754_20739.png">
+                            </div>  
+  
+
+                            <div class="pill scene-pill" data-value="co3d_vase_118_13872_29491">
+                                <img class="card-img" src="thumbnails/reconfusion/co3d_vase_118_13872_29491.png">
+                            </div>  
+  
+                        </div>
+
+                        <div class="pill-row scene-pills" id="image_dream-pills" role="group" aria-relevant="additions text">
+                            <div class="pill scene-pill" data-value="bear">
+                                <img class="card-img" src="thumbnails/image_dream/bear.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="corgi">
+                                <img class="card-img" src="thumbnails/image_dream/corgi.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="frog">
+                                <img class="card-img" src="thumbnails/image_dream/frog.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="ghost">
+                                <img class="card-img" src="thumbnails/image_dream/ghost.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="house">
+                                <img class="card-img" src="thumbnails/image_dream/house.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="katana">
+                                <img class="card-img" src="thumbnails/image_dream/katana.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="mech">
+                                <img class="card-img" src="thumbnails/image_dream/mech.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="pig">
+                                <img class="card-img" src="thumbnails/image_dream/pig.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="pile">
+                                <img class="card-img" src="thumbnails/image_dream/pile.png">
+                            </div>
+                            <div class="pill scene-pill" data-value="tank">
+                                <img class="card-img" src="thumbnails/image_dream/tank.png">
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        playbackSpeeds = {
+                            "realmdreamer": [3.0, 1.0],
+                            "zero_nvs": [1.5, 1.0],
+                            "zipnerf": [1.5, 1.0],
+                            "reconfusion": [1.5, 1.0],
+                            "image_dream": [1.5, 1.0],
+                        };
+
+                        aspectRatios = {
+                            "realmdreamer": 1.0,
+                            "zero_nvs": 1.5,
+                            "zipnerf": 1.5,
+                            "reconfusion": 1.5,
+                            "image_dream": 1.0,
+                        }
+
+                        labels = {
+                            "realmdreamer": "RealmDreamer",
+                            "zero_nvs": "ZeroNVS",
+                            "zipnerf": "ZipNeRF (3-view)",
+                            "reconfusion": "ReconFusion (3-view)",
+                            "image_dream": "ImageDream",
+                        }
+
+                        compareDiv = document.querySelector("#single-image-compare")
+                        activeMethod = "realmdreamer"
+                        activeScene = "bear"
+                        activeMode = "rgb"
+
+                        // Select all elements with the class 'method-pill'
+                        const methodPills = compareDiv.querySelectorAll('.method-pill');
+                        const modePillParent = compareDiv.querySelector('#mode-buttons')
+                        const modePills = modePillParent.querySelectorAll('.mode-pill')
+
+                        for (modePill of modePills) {
+                            modePill.addEventListener('click', function () {
+                                activeMode = this.getAttribute('data-value');
+                                updateDisplay();
+                            });
+                        }
+
+
+                        const videoParent = compareDiv.querySelector(".video-container");
+                        const leftVideo = videoParent.querySelector('#single-comp-left')
+                        const leftLabel = videoParent.querySelector("#single-comp-label-left")
+                        const rightVideo = videoParent.querySelector('#single-comp-right')
+                        const scenePillContainers = compareDiv.querySelectorAll(`.scene-pills`);
+
+                        for (methodPill of methodPills) {
+                            const method = methodPill.getAttribute('data-value');
+                            // Select all scene pill containers
+                            const scenePillContainer = compareDiv.querySelector(`#${method}-pills`);
+                            const scenePills = scenePillContainer.querySelectorAll(".scene-pill")
+
+                            for (scenePill of scenePills) {
+                                scenePill.addEventListener('click', function () {
+                                    activeScene = this.getAttribute("data-value")
+                                    console.log(activeScene);
+                                    updateDisplay();
+                                });
+                            }
+
+                            // Attach a click event listener to each pill
+                            methodPill.addEventListener('click', function () {
+                                activeMethod = method
+                                activeMode = "rgb"
+                                const scenePillContainer = compareDiv.querySelector(`#${method}-pills`);
+                                const scenePills = scenePillContainer.querySelectorAll(".scene-pill")
+                                activeScene = scenePills[0].getAttribute("data-value")
+                                updateDisplay();
+                            });
+                        }
+
+                        function updateDisplay() {
+                            if (activeMethod == 'image_dream') {
+                                modePillParent.style.display = 'none';
+                            } else {
+                                modePillParent.style.display = '';
+                            }
+                            // Update active pill
+
+                            methodPills.forEach(p => p.classList.remove('active'));
+                            methodPills.forEach(methodPill => {
+                                if (methodPill.getAttribute('data-value') == activeMethod) {
+                                    methodPill.querySelector('a').classList.add('active');
+                                } else {
+                                    methodPill.querySelector('a').classList.remove('active')
+                                }
+                            });
+
+                            // Update mode pill
+                            for (modePill of modePills) {
+                                if (modePill.getAttribute('data-value') === activeMode) {
+                                    modePill.classList.add('active');
+                                } else {
+                                    modePill.classList.remove('active');
+                                }
+                            }
+
+                            // Show/Hide scene pill containers based on the selected method
+                            scenePillContainers.forEach(container => {
+                                if (container.id === `${activeMethod}-pills`) {
+                                    container.style.display = ''; // Or 'block' depending on your layout
+                                } else {
+                                    container.style.display = 'none';
+                                }
+                            });
+
+                            const scenePillContainer = compareDiv.querySelector(`#${activeMethod}-pills`);
+                            const scenePills = scenePillContainer.querySelectorAll(".scene-pill")
+
+                            for (scenePill of scenePills) {
+                                if (scenePill.getAttribute('data-value') == activeScene) {
+                                    scenePill.classList.add('active');
+                                } else {
+                                    scenePill.classList.remove('active')
+                                }
+                            }
+
+                            var zdist = "";
+                            if (activeMode == "depth") {
+                                zdist = "_zdist";
+                            }
+
+                            // Update video display. This still has a small flash, could double buffer the video like before, but
+                            // as long as the layout stays consistent it really isn't bad.
+                            leftVideo.src = `videos/comparison/${activeMethod}/baseline/${activeScene}${zdist}.webm`
+                            rightVideo.src = `videos/comparison/${activeMethod}/ours/${activeScene}${zdist}.webm`
+
+                            var [lr, rr] = playbackSpeeds[activeMethod];
+                            leftVideo.playbackRate = lr;
+                            rightVideo.playbackRate = rr;
+
+                            videoParent.style.aspectRatio = aspectRatios[activeMethod] * 2.0;
+
+                            console.log(leftLabel)
+                            console.log(leftLabel.innerHtml)
+
+                            leftLabel.innerHTML = labels[activeMethod];
+                        }
+                        // Update initial display
+                        updateDisplay()
+                    </script>
+                </div>
+            </div> -->
+
+            <br>
+            <br>
+            <br>
+            <br>
+
+<!-- 
+            <div class="row justify-content-center">
+                <div class="col-md-5 center text-start">
+                    <label style="display: inline" for="bibtex">
+                        <h4 style="text-align: center">BibTeX </h4>
+                    </label>
+                    <textarea id="bibtex" class="form-control" readonly>
+                        </textarea>
+                </div>
+            </div> -->
+
+
+        </main>
+        <footer>
+        </footer>
+    </div>
+</body>
+
+</html>
+
