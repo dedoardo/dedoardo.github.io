@@ -58,6 +58,11 @@
         setupCarousel(createSplatView("splat-picker"), document.querySelector("#splat-carousel"));
     </script>
     <style>
+        /* Global responsive */
+        img, video {
+            max-width: 100%;
+            height: auto;
+        }
         .final-element {
             white-space: nowrap;
         }
@@ -299,7 +304,7 @@
 </head>
 
 <body style="padding: 5%; padding-top: min(15px, 5%); padding-bottom: min(5px, 5%); width: 100%">
-    <div class="container-lg text-center" style="max-width: min(800px, 90vw); margin: auto;" id="main">
+    <div class="container-lg text-center" style="max-width: 800px; width: 90%; margin: auto;" id="main">
         <header role="banner">
             <!-- <div class="container" id="main"> -->
             <div class="row">
