@@ -387,7 +387,7 @@
                 <div class="col-md-8 offset-md-2">
                     <h3 class="section-title" style="text-align: center"> Appearance Decoupling </h3>
                     <p class="text-justify" style="text-align: left; font-size: 0.9rem;">
-                        DINO features are prone to overfitting when naively used for ControlNet training, the model learns to reproduce training domain appearance rather than following structural guidance. We study this by dropping first frame conditioning and relying solely on text prompts. Setting the prompt to "blue" reveals the bias: baseline models ignore the prompt and reconstruct original colors, while our appearance-augmented training significantly reduces domain overfitting.
+                        Simply training a ControlNet on DINO features results in them overfitting, the model learns to reproduce training domain appearance rather than following structural guidance. We study this by dropping first frame conditioning and relying solely on text prompts. Setting the prompt to "blue" reveals the bias: baseline models ignore the prompt and reconstruct original colors, while our appearance-augmented training significantly reduces domain overfitting.
                     </p>
                     <img src="images/figure1.png" alt="Reconstruction comparison" style="width: 100%; border-radius: 8px; margin-top: 15px;">
                 </div>
@@ -419,6 +419,9 @@
                     <h3 class="section-title" style="text-align: center"> Controlled Video Diffusion as Generative Rendering </h3>
                     <p class="text-justify" style="text-align: left; font-size: 0.9rem;">
                         We explore a range of 3D representations as conditioning sources for video generation. Voxel grids provide coarse but camera-consistent structural priors across views. Untextured mesh renderings capture surface geometry with holes and missing regions handled via visibility masking. Point clouds, whether from LiDAR scans or 3D Gaussian Splatting reconstructions, offer sparse but semantically rich guidance. Using Concerto, we extract DINO-like features directly from these uncolored representations, bypassing the need for RGB textures entirely. Each representation trades off spatial detail for semantic richness: the high dimensionality of foundation features (384 channels) compensates for coarse spatial resolution, enabling photorealistic video generation from geometry alone.
+                    </p>
+                    <p class="text-justify" style="text-align: left; font-size: 0.9rem;">
+                        Representations like 3DGS more faithfully capture the feature field when rendered (despite minor artifacts) and result in more accurate reconstructions. Concerto provides very coarse features on the other hand, so the resulting generation approximately match the material (wood/cloth) but don't go beyond that in control and the geometry can significantly change. We find meshes and voxels to be of similar quality, the former does not provide very meaningful features and the latter suffers from aggregation results. All checkpoints have been finetuned from the base 2D model described above.
                     </p>
                     <img src="images/generative_rendering.png" alt="Generative Rendering" style="width: 100%; border-radius: 8px; margin-top: 15px;">
                 </div>
