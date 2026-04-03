@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edoardo Dominici</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" href="favicon.png">
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -167,6 +169,30 @@
             <h2 class="text-2xl font-bold text-primary-dark mb-6 border-b-2 border-blue-300 pb-1">Publications</h2>
 
             <div class="space-y-10">
+
+                <!-- Control-DINO -->
+                <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
+                    <div class="w-32 h-24 md:w-36 md:h-28 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-gray-100 pub-img">
+                        <img src="images/control_dino_square.gif" alt="Control-DINO" class="object-fill w-full h-full">
+                    </div>
+                    <div class="flex-grow">
+                        <p class="text-lg font-bold text-primary-dark mb-0.5 leading-tight">
+                            <a href="https://arxiv.org/abs/2604.01761" class="pub-link">Control-DINO: Feature Space Conditioning for Controllable Image-to-Video Diffusion</a>
+                        </p>
+                        <p class="text-sm text-gray-600 mb-1"><strong>Edoardo A. Dominici*</strong>, Thomas Deixelberger*, Konstantinos Vardis, Markus Steinberger</p>
+                        <div class="flex items-center space-x-2 mb-2">
+                            <span class="venue-tag venue-tag-highlight">ArXiv 2026</span>
+                        </div>
+                        <div class="tldr-bubble">
+                            <strong>TL;DR:</strong> A DINO-conditioned ControlNet for image-to-video diffusion that is appearance invariant offering semantic and structural control.
+                        </div>
+                        <div class="mt-2 text-xs link-group text-blue-600 font-medium font-sans">
+                            <a href="projects/control-dino/">Project</a>
+                            <a href="https://arxiv.org/abs/2604.01761">Arxiv</a>
+                            <a href="citations/control_dino.txt" target="_blank">Cite</a>
+                        </div>
+                    </div>
+                </article>
 
                 <!-- GuidedSceneGen -->
                 <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">

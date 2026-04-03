@@ -1,0 +1,6 @@
+@article{Dominici2026ControlDINO,
+  author = {Dominici, Edoardo A. and Deixelberger, Thomas and Vardis, Konstantinos and Steinberger, Markus},
+  title = {Control-DINO: Feature Space Conditioning for Controllable Image-to-Video Diffusion},
+  journal = {arXiv preprint arXiv:2604.01761},
+  year = {2026}
+}
