@@ -1,0 +1,14 @@
+@article{Drescher_2026,
+    title={PixelSync: Enhancing Texture Generation via Explicit Feature Synchronization},
+    volume={9},
+    ISSN={2577-6193},
+    url={http://dx.doi.org/10.1145/3804489},
+    DOI={10.1145/3804489},
+    number={1},
+    journal={Proceedings of the ACM on Computer Graphics and Interactive Techniques},
+    publisher={Association for Computing Machinery (ACM)},
+    author={Drescher, Philipp and Dominici, Edoardo Alberto and Nazzaro, Giacomo and Vardis, Konstantinos and Hauswiesner, Stefan and Steinberger, Markus},
+    year={2026},
+    month=May,
+    pages={1--19}
+}
