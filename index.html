@@ -32,26 +32,44 @@
             padding-right: 0;
             margin-right: 0;
         }
-        /* Subtle venue tag */
+        /* Venue tag — blue pill matching the Control-DINO project page badge */
         .venue-tag {
             display: inline-block;
-            background-color: #f3f4f6;
-            color: #374151;
-            padding: 0.125rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
+            background-color: #e8f0fe;
+            color: #1a56db;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
             font-weight: 600;
             font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.025em;
+            border: 1px solid #c7dbfa;
+            letter-spacing: 0.3px;
         }
         .venue-tag-highlight {
-            background-color: #ecfdf5;
-            color: #065f46;
+            background-color: #e8f0fe;
+            color: #1a56db;
+            border-color: #c7dbfa;
         }
         .venue-tag-important {
             background-color: #fef2f2;
             color: #991b1b;
+            border-color: #fbcfcf;
+        }
+        /* Small year pill for the experience timeline */
+        .year-pill {
+            display: inline-block;
+            background-color: #e8f0fe;
+            color: #1a56db;
+            padding: 2px 10px;
+            border-radius: 9999px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+            border: 1px solid #c7dbfa;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            min-width: 7.5rem;
+            text-align: center;
         }
         /* TL;DR bubble */
         .tldr-bubble {
@@ -109,6 +127,7 @@
                 </a>
                 <nav class="hidden md:flex space-x-6 text-sm font-sans">
                     <a href="#about" class="text-gray-600 hover:text-accent-green transition duration-150 ease-in-out">About</a>
+                    <a href="#experience" class="text-gray-600 hover:text-accent-green transition duration-150 ease-in-out">Work Experience</a>
                     <a href="#publications" class="text-gray-600 hover:text-accent-green transition duration-150 ease-in-out font-semibold border-b-2 border-accent-green">Publications</a>
                     <a href="#contact" class="text-gray-600 hover:text-accent-green transition duration-150 ease-in-out">Contact</a>
                 </nav>
@@ -164,16 +183,91 @@
             </div>
         </section>
 
-        <!-- 3. Publications Section -->
-        <section id="publications">
+        <!-- 3. Experience Timeline -->
+        <section id="experience">
+            <h2 class="text-2xl font-bold text-primary-dark mb-4 border-b-2 border-blue-300 pb-1">Work Experience</h2>
+            <div class="overflow-x-auto pb-2 -mx-2 px-2">
+                <ol class="relative flex justify-between min-w-[600px] gap-2">
+                    <!-- horizontal connecting rail (4 nodes), threads through the logo row -->
+                    <div class="absolute h-0.5 bg-blue-200 z-0" style="top:67px; left:12.5%; right:12.5%;"></div>
+
+                    <li class="relative z-10 flex-1 flex flex-col items-center text-center px-1">
+                        <div class="flex flex-col items-center justify-end" style="height:44px;">
+                            <img src="images/city_vancouver.png" alt="Vancouver" class="w-7 h-7 object-contain">
+                            <span class="text-base leading-none mt-1" role="img" aria-label="Canada">🇨🇦</span>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-white border-2 border-blue-300 flex items-center justify-center overflow-hidden shadow-sm">
+                            <img src="images/logo_ubc.png" alt="University of British Columbia" class="w-full h-full object-cover">
+                        </div>
+                        <span class="year-pill mt-2">2017 – 2020</span>
+                        <span class="font-semibold text-sm text-gray-800 mt-1 leading-tight">Research Assistant /<br>Teaching Assistant</span>
+                        <span class="text-gray-500 text-xs leading-tight">Univ. of British Columbia</span>
+                    </li>
+
+                    <li class="relative z-10 flex-1 flex flex-col items-center text-center px-1">
+                        <div class="flex flex-col items-center justify-end" style="height:44px;">
+                            <img src="images/city_toronto.png" alt="Toronto" class="w-7 h-7 object-contain">
+                            <span class="text-base leading-none mt-1" role="img" aria-label="Canada">🇨🇦</span>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-white border-2 border-blue-300 flex items-center justify-center overflow-hidden shadow-sm">
+                            <img src="images/logo_tangent.png" alt="Tangent Animation" class="w-8 h-8 object-contain">
+                        </div>
+                        <span class="year-pill mt-2">2020 – 2021</span>
+                        <span class="font-semibold text-sm text-gray-800 mt-1 leading-tight">Rendering Engineer</span>
+                        <span class="text-gray-500 text-xs leading-tight">Tangent Animation</span>
+                    </li>
+
+                    <li class="relative z-10 flex-1 flex flex-col items-center text-center px-1">
+                        <!-- Animal Logic, acquired by Netflix → Netflix Animation Studios -->
+                        <div class="flex flex-col items-center justify-end" style="height:44px;">
+                            <svg viewBox="0 0 40 28" class="h-7 w-auto" aria-label="Sydney Opera House"><circle cx="34.5" cy="6" r="2.5" fill="#fcd34d"/><path d="M6 23 C8 13, 13 6, 18 3.5 C19.6 6, 20.2 14, 22 23 Z" fill="#ffffff" stroke="#0284c7" stroke-width="0.8" stroke-linejoin="round"/><path d="M2.5 23 C4.5 16, 8 10, 11 8.2 C12.6 10.5, 13 16.5, 15 23 Z" fill="#e7f3fb" stroke="#0284c7" stroke-width="0.8" stroke-linejoin="round"/><path d="M22 23 C24 15, 27.5 9, 30.5 6.8 C31.6 9, 32 15.5, 33.5 23 Z" fill="#ffffff" stroke="#0284c7" stroke-width="0.8" stroke-linejoin="round"/><path d="M25.5 23 C27 18, 29 14, 30.7 12.6 C31.5 14.6, 31.8 18, 33 23 Z" fill="#e7f3fb" stroke="#0284c7" stroke-width="0.8" stroke-linejoin="round"/><rect x="1" y="22.4" width="38" height="2.3" rx="1.1" fill="#38bdf8"/><path d="M2 26 q3.2 -1.4 6.4 0 t6.4 0 t6.4 0 t6.4 0 t6.4 0" fill="none" stroke="#7dd3fc" stroke-width="1.1" stroke-linecap="round"/></svg>
+                            <span class="text-base leading-none mt-1" role="img" aria-label="Australia">🇦🇺</span>
+                        </div>
+                        <div class="flex items-center justify-center">
+                            <div class="w-11 h-11 rounded-full bg-white border-2 border-blue-300 flex items-center justify-center overflow-hidden shadow-sm relative z-10">
+                                <img src="images/logo_animallogic.png" alt="Animal Logic" class="w-8 h-8 object-contain">
+                            </div>
+                            <div class="w-11 h-11 rounded-full bg-white border-2 border-blue-300 flex items-center justify-center overflow-hidden shadow-sm -ml-2.5">
+                                <img src="images/logo_netflix.png" alt="Netflix Animation Studios" class="w-7 h-7 object-contain">
+                            </div>
+                        </div>
+                        <span class="year-pill mt-2">2021 – 2023</span>
+                        <span class="font-semibold text-sm text-gray-800 mt-1 leading-tight">Rendering R&amp;D</span>
+                        <span class="text-gray-500 text-xs leading-tight">Animal Logic<br>→ Netflix Animation Studios</span>
+                    </li>
+
+                    <li class="relative z-10 flex-1 flex flex-col items-center text-center px-1">
+                        <!-- two roles held at the same time: paired logos on one timeline point -->
+                        <div class="flex flex-col items-center justify-end" style="height:44px;">
+                            <svg viewBox="0 0 36 30" class="h-7 w-auto" aria-label="Zürich"><circle cx="29.5" cy="6" r="2.8" fill="#fcd34d"/><path d="M1 22 L10 7 L16 15 L22 4 L35 22 Z" fill="#9aa7b5"/><path d="M22 4 L35 22 L22 22 Z" fill="#7e8b99"/><path d="M7.7 10.2 L10 7 L12.4 10.3 L11 9.4 L10 10.3 L8.9 9.5 Z" fill="#ffffff"/><path d="M19.7 8 L22 4 L24.7 8.4 L23 7.3 L22 8.3 L20.9 7.2 Z" fill="#ffffff"/><rect x="1" y="21.5" width="34" height="6.5" rx="2.2" fill="#38bdf8"/><path d="M3 24.4 q3 -1.4 6 0 t6 0 t6 0 t6 0 t6 0" fill="none" stroke="#bae6fd" stroke-width="1" stroke-linecap="round"/><path d="M3 27 q3 -1.4 6 0 t6 0 t6 0 t6 0 t6 0" fill="none" stroke="#7dd3fc" stroke-width="1" stroke-linecap="round"/></svg>
+                            <span class="text-base leading-none mt-1" role="img" aria-label="Switzerland">🇨🇭</span>
+                        </div>
+                        <div class="flex items-center justify-center">
+                            <div class="w-11 h-11 rounded-full bg-white border-2 border-blue-300 flex items-center justify-center overflow-hidden shadow-sm relative z-10">
+                                <img src="images/logo_huawei.png" alt="Huawei" class="w-9 h-9 object-contain">
+                            </div>
+                            <div class="w-11 h-11 rounded-full bg-white border-2 border-blue-300 flex items-center justify-center overflow-hidden shadow-sm -ml-2.5">
+                                <img src="images/tugraz.png" alt="TU Graz" class="w-7 h-7 object-contain">
+                            </div>
+                        </div>
+                        <span class="year-pill mt-2">2023 – Present</span>
+                        <span class="text-sm leading-tight mt-1"><span class="font-semibold text-gray-800">Research Engineer</span> <span class="text-gray-500">· Huawei</span></span>
+                        <span class="text-sm leading-tight"><span class="font-semibold text-gray-800">PhD Student</span> <span class="text-gray-500">· TU Graz, since ’25</span></span>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- 4. Publications Section -->
+        <section id="publications" class="!mt-4">
             <h2 class="text-2xl font-bold text-primary-dark mb-6 border-b-2 border-blue-300 pb-1">Publications</h2>
 
             <div class="space-y-10">
 
                 <!-- Control-DINO -->
                 <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-32 h-24 md:w-36 md:h-28 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-gray-100 pub-img">
-                        <img src="images/control_dino_square.gif" alt="Control-DINO" class="object-fill w-full h-full">
+                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                        <a href="projects/control-dino/" class="block w-full h-full"><img src="images/control_dino_square.gif" alt="Control-DINO" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
                         <p class="text-lg font-bold text-primary-dark mb-0.5 leading-tight">
@@ -184,7 +278,7 @@
                             <span class="venue-tag venue-tag-highlight">ECCV 2026</span>
                         </div>
                         <div class="tldr-bubble">
-                            <strong>TL;DR:</strong> A DINO-conditioned ControlNet for image-to-video diffusion that is appearance invariant offering semantic and structural control.
+                            <strong>TL;DR:</strong> A DINO-conditioned ControlNet for image-to-video diffusion that is appearance invariant offering semantic and structural control. We show how it can be applied to Video Transfer and Video-from-3D.
                         </div>
                         <div class="mt-2 text-xs link-group text-blue-600 font-medium font-sans">
                             <a href="projects/control-dino/">Project</a>
@@ -196,8 +290,8 @@
 
                 <!-- GuidedSceneGen -->
                 <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-32 h-24 md:w-36 md:h-28 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-gray-100 pub-img">
-                        <img src="images/guidedscenegen.gif" alt="GuidedSceneGen" class="object-fill w-full h-full">
+                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                        <a href="https://arxiv.org/abs/2603.13910" class="block w-full h-full"><img src="images/guidedscenegen.gif" alt="GuidedSceneGen" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
                         <p class="text-lg font-bold text-primary-dark mb-0.5 leading-tight">
@@ -218,8 +312,8 @@
 
                 <!-- PixelSync -->
                 <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-32 h-24 md:w-36 md:h-28 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-gray-100 pub-img">
-                        <img src="images/pixelsync.png" alt="PixelSync" class="object-fill w-full h-full">
+                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                        <a href="https://dl.acm.org/doi/10.1145/3804489" class="block w-full h-full"><img src="images/pixelsync.png" alt="PixelSync" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
                         <p class="text-lg font-bold text-primary-dark mb-0.5 leading-tight">
@@ -241,8 +335,8 @@
 
                 <!-- DreamAnywhere -->
                 <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-32 h-24 md:w-36 md:h-28 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-gray-100 pub-img">
-                        <img src="images/lighthouse_cosmos_square.gif" alt="DreamAnywhere" class="object-fill w-full h-full">
+                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                        <a href="projects/dreamanywhere/" class="block w-full h-full"><img src="images/lighthouse_cosmos_square.gif" alt="DreamAnywhere" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
                         <p class="text-lg font-bold text-primary-dark mb-0.5 leading-tight">
@@ -266,8 +360,8 @@
 
                 <!-- Real-time Rendering with a Neural Irradiance Volume -->
                 <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-32 h-24 md:w-36 md:h-28 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-gray-100 pub-img">
-                        <img src="images/paper1036_square.gif" alt="Neural Irradiance Volume" class="object-fill w-full h-full">
+                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                        <a href="https://arxiv.org/abs/2602.12949" class="block w-full h-full"><img src="images/paper1036_square.gif" alt="Neural Irradiance Volume" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
                         <p class="text-lg font-bold text-primary-dark mb-0.5 leading-tight">
@@ -275,7 +369,7 @@
                         </p>
                         <p class="text-sm text-gray-600 mb-1">Arno Coomans, Giacomo Nazzaro, <strong>Edoardo A. Dominici</strong>, Christian Döring, Floor Verhoeven, Konstantinos Vardis, Markus Steinberger</p>
                         <div class="mb-2">
-                            <span class="venue-tag venue-tag-highlight">Eurographics 2026, Computer Graphics Forum</span>
+                            <span class="venue-tag venue-tag-highlight">Eurographics 2026, Computer Graphics Forum 45(2)</span>
                         </div>
                         <div class="tldr-bubble">
                             <strong>TL;DR:</strong> We introduce an irradiance formulation for neural network-based radiance caching which improves quality and compression compared to existing probe based methods.
@@ -289,8 +383,8 @@
 
                 <!-- Real-time Neural Rendering of Dynamic Light Fields -->
                 <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-32 h-24 md:w-36 md:h-28 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-gray-100 pub-img">
-                        <img src="images/dylf_square.gif" alt="Dynamic Light Fields" class="object-fill w-full h-full">
+                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                        <a href="https://arnocoomans.be/data/eg2024_paper.pdf" class="block w-full h-full"><img src="images/dylf_square.gif" alt="Dynamic Light Fields" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
                         <p class="text-lg font-bold text-primary-dark mb-0.5 leading-tight">
@@ -298,7 +392,7 @@
                         </p>
                         <p class="text-sm text-gray-600 mb-1">Arno Coomans, <strong>Edoardo A. Dominici</strong>, Christian Döring, Joerg H. Mueller, Jozef Hladky, Markus Steinberger</p>
                         <div class="mb-2">
-                            <span class="venue-tag venue-tag-highlight">Eurographics 2024, Computer Graphics Forum</span>
+                            <span class="venue-tag venue-tag-highlight">Eurographics 2024, Computer Graphics Forum 43(2)</span>
                         </div>
                         <div class="tldr-bubble">
                             <strong>TL;DR:</strong> Introduce a temporal extension to neural radiosity and show how dynamic light fields can be cached into compact neural networks and encodings for real-time rendering.
@@ -312,8 +406,8 @@
 
                 <!-- Focus Range -->
                 <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-32 h-24 md:w-36 md:h-28 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-gray-100 pub-img">
-                        <img src="images/focus_range.gif" alt="Focus Range" class="object-fill w-full h-full">
+                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                        <a href="https://animallogic.com/technology/publications/focus-range/" class="block w-full h-full"><img src="images/focus_range.gif" alt="Focus Range" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
                         <p class="text-lg font-bold text-primary-dark mb-0.5 leading-tight">
@@ -336,9 +430,9 @@
 
                 <!-- PROVIDE -->
                 <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-32 h-24 md:w-36 md:h-28 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-gray-100 pub-img flex flex-col">
-                        <img src="images/video_decomp_2020_0.gif" alt="PROVIDE" class="object-fill w-full h-1/2">
-                        <img src="images/video_decomp_2020_1.gif" alt="PROVIDE" class="object-fill w-full h-1/2">
+                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img flex flex-col">
+                        <a href="https://proceedings.mlr.press/v161/zablotskaia21a.html" class="block w-full h-1/2"><img src="images/video_decomp_2020_0.gif" alt="PROVIDE" class="object-fill w-full h-full"></a>
+                        <a href="https://proceedings.mlr.press/v161/zablotskaia21a.html" class="block w-full h-1/2"><img src="images/video_decomp_2020_1.gif" alt="PROVIDE" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
                         <p class="text-lg font-bold text-primary-dark mb-0.5 leading-tight">
@@ -360,8 +454,8 @@
 
                 <!-- PolyFit -->
                 <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-32 h-24 md:w-36 md:h-28 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-gray-100 pub-img">
-                        <img src="images/polyfit_2020.png" alt="PolyFit" class="object-fill w-full h-full">
+                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                        <a href="http://www.cs.ubc.ca/labs/imager/tr/2020/ClipArtVectorization" class="block w-full h-full"><img src="images/polyfit_2020.png" alt="PolyFit" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
                         <p class="text-lg font-bold text-primary-dark mb-0.5 leading-tight">
@@ -384,8 +478,8 @@
 
                 <!-- Perception-Driven Semi-Structured Boundary Vectorization -->
                 <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-32 h-24 md:w-36 md:h-28 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-gray-100 pub-img">
-                        <img src="images/vectorization_2018.png" alt="Perception-Driven Vectorization" class="object-fill w-full h-full">
+                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                        <a href="http://www.cs.ubc.ca/labs/imager/tr/2018/PerceptionDrivenVectorization/" class="block w-full h-full"><img src="images/vectorization_2018.png" alt="Perception-Driven Vectorization" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
                         <p class="text-lg font-bold text-primary-dark mb-0.5 leading-tight">
