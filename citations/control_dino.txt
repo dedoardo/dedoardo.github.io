@@ -1,6 +1,6 @@
-@article{Dominici2026ControlDINO,
+@InProceedings{Dominici_2026_ECCV,
   author = {Dominici, Edoardo A. and Deixelberger, Thomas and Vardis, Konstantinos and Steinberger, Markus},
   title = {Control-DINO: Feature Space Conditioning for Controllable Image-to-Video Diffusion},
-  journal = {arXiv preprint arXiv:2604.01761},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
   year = {2026}
 }

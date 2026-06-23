@@ -304,6 +304,28 @@
 </head>
 
 <body style="padding: 5%; padding-top: min(15px, 5%); padding-bottom: min(5px, 5%); width: 100%">
+
+<!-- Related projects nav -->
+<style>
+.related-nav{display:flex;justify-content:center;align-items:center;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;margin:0 0 14px;}
+.related-dropdown{position:relative;}
+.related-trigger{cursor:default;color:#4a4a4a;padding:8px 14px;font-weight:600;font-size:0.95rem;display:inline-flex;align-items:center;gap:6px;border-radius:8px;}
+.related-dropdown:hover .related-trigger{color:#3273dc;background:#f5f7fb;}
+.related-menu{display:none;position:absolute;left:50%;transform:translateX(-50%);top:100%;background:#fff;border:1px solid #ededed;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.10);min-width:260px;padding:6px 0;z-index:50;}
+.related-dropdown:hover .related-menu{display:block;}
+.related-menu a{display:block;padding:8px 16px;color:#363636;text-decoration:none;white-space:nowrap;font-size:0.9rem;}
+.related-menu a:hover{background:#f5f5f5;color:#3273dc;}
+</style>
+<nav class="related-nav">
+  <div class="related-dropdown">
+    <span class="related-trigger">More Research <span style="font-size:0.7em;">&#9662;</span></span>
+    <div class="related-menu">
+      <a href="https://d3ixi.github.io/GuidedSceneGen/">Scene Generation at Absolute Scale</a>
+      <a href="https://dedoardo.github.io/projects/dreamanywhere/">DreamAnywhere</a>
+    </div>
+  </div>
+</nav>
+
     <div class="container-lg text-center" style="max-width: 1104px; width: 90%; margin: auto;" id="main">
         <header role="banner">
             <!-- <div class="container" id="main"> -->
@@ -329,7 +351,7 @@
             <!-- Affiliations -->
             <div class="row justify-content-center" style="margin-top: 8px;">
                 <div class="col-md-10 text-center" style="font-size: 0.9rem; color: #555;">
-                    Huawei Technologies <sup>1</sup>Switzerland, <sup>2</sup>Austria &nbsp;&nbsp;
+                    Huawei <sup>1</sup>Switzerland, <sup>2</sup>Austria &nbsp;&nbsp;
                     <sup>3</sup>Graz University of Technology
                 </div>
             </div>

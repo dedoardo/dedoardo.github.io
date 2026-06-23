@@ -1,0 +1,6 @@
+@InProceedings{Ainetter_2026_ECCV,
+  author = {Ainetter, Stefan and Deixelberger, Thomas and Dominici, Edoardo A. and Drescher, Philipp and Vardis, Konstantinos and Steinberger, Markus},
+  title = {Scene Generation at Absolute Scale: Utilizing Semantic and Geometric Guidance From Text for Accurate and Interpretable 3D Indoor Scene Generation},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+  year = {2026}
+}
