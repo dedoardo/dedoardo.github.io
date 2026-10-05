@@ -56,18 +56,26 @@
             padding-right: 0;
             margin-right: 0;
         }
-        /* Venue tag — blue pill matching the Control-DINO project page badge */
+        /* Venue tag — compact small-caps pill, venue + year only */
         .venue-tag {
             display: inline-block;
-            background-color: #e8f0fe;
-            color: #1a56db;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            padding: 2px 9px;
+            border-radius: 9999px;
+            font-size: 0.68rem;
+            font-weight: 700;
             font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
-            border: 1px solid #c7dbfa;
-            letter-spacing: 0.3px;
+            border: 1px solid #dbeafe;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        /* Journal / proceedings detail inside the pill, toned down */
+        .venue-tag .venue-tag-sub {
+            text-transform: none;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            opacity: 0.8;
         }
         .venue-tag-highlight {
             background-color: #e8f0fe;
@@ -95,19 +103,19 @@
             min-width: 7.5rem;
             text-align: center;
         }
-        /* TL;DR bubble */
+        /* TL;DR — compact left-accent strip */
         .tldr-bubble {
-            background-color: #f9fafb;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            padding: 0.5rem 0.75rem;
-            margin-top: 0.5rem;
-            font-size: 0.8rem;
+            background-color: #f8fafc;
+            border-left: 3px solid #bfdbfe;
+            border-radius: 0 0.25rem 0.25rem 0;
+            padding: 0.3rem 0.6rem;
+            margin-top: 0.4rem;
+            font-size: 0.78rem;
             color: #4b5563;
             line-height: 1.4;
         }
         .tldr-bubble strong {
-            color: #6b7280;
+            color: #2563eb;
             font-weight: 600;
             font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
             font-size: 0.65rem;
@@ -290,13 +298,13 @@
 
         <!-- 4. Publications Section -->
         <section id="publications" class="!mt-4">
-            <h2 class="text-2xl font-bold text-primary-dark mb-6 border-b-2 border-blue-300 pb-1">Publications</h2>
+            <h2 class="text-2xl font-bold text-primary-dark mb-4 border-b-2 border-blue-300 pb-1">Publications</h2>
 
-            <div class="space-y-10">
+            <div class="divide-y divide-gray-100">
 
                 <!-- Control-DINO -->
-                <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                <article class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-5 py-4 first:pt-0 last:pb-0">
+                    <div class="w-36 h-28 md:w-40 md:h-32 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
                         <a href="projects/control-dino/" class="block w-full h-full"><img src="images/control_dino_square.gif" alt="Control-DINO" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
@@ -304,23 +312,23 @@
                             <a href="https://arxiv.org/abs/2604.01761" class="pub-link">Control-DINO: Feature Space Conditioning for Controllable Image-to-Video Diffusion</a>
                         </p>
                         <p class="text-sm text-gray-600 mb-1"><strong>Edoardo A. Dominici*</strong>, Thomas Deixelberger*, Konstantinos Vardis, Markus Steinberger</p>
-                        <div class="flex items-center space-x-2 mb-2">
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1.5">
                             <span class="venue-tag venue-tag-highlight">ECCV 2026</span>
+                            <span class="text-xs link-group text-blue-600 font-medium font-sans">
+                                <a href="projects/control-dino/">Project</a>
+                            <a href="https://arxiv.org/abs/2604.01761">Arxiv</a>
+                            <a href="citations/control_dino.txt" target="_blank">Cite</a>
+                            </span>
                         </div>
                         <div class="tldr-bubble">
                             <strong>TL;DR:</strong> A DINO-conditioned ControlNet for image-to-video diffusion that is appearance invariant offering semantic and structural control. We show how it can be applied to Video Transfer and Video-from-3D.
-                        </div>
-                        <div class="mt-2 text-xs link-group text-blue-600 font-medium font-sans">
-                            <a href="projects/control-dino/">Project</a>
-                            <a href="https://arxiv.org/abs/2604.01761">Arxiv</a>
-                            <a href="citations/control_dino.txt" target="_blank">Cite</a>
                         </div>
                     </div>
                 </article>
 
                 <!-- GuidedSceneGen -->
-                <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                <article class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-5 py-4 first:pt-0 last:pb-0">
+                    <div class="w-36 h-28 md:w-40 md:h-32 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
                         <a href="https://d3ixi.github.io/GuidedSceneGen/" class="block w-full h-full"><img src="images/guidedscenegen.gif" alt="GuidedSceneGen" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
@@ -328,23 +336,23 @@
                             <a href="https://arxiv.org/abs/2603.13910" class="pub-link">Scene Generation at Absolute Scale: Utilizing Semantic and Geometric Guidance From Text for Accurate and Interpretable 3D Indoor Scene Generation</a>
                         </p>
                         <p class="text-sm text-gray-600 mb-1">Stefan Ainetter, Thomas Deixelberger, <strong>Edoardo A. Dominici</strong>, Philipp Drescher, Konstantinos Vardis, Markus Steinberger</p>
-                        <div class="mb-2">
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1.5">
                             <span class="venue-tag venue-tag-highlight">ECCV 2026</span>
+                            <span class="text-xs link-group text-blue-600 font-medium font-sans">
+                                <a href="https://d3ixi.github.io/GuidedSceneGen/">Project</a>
+                            <a href="https://arxiv.org/abs/2603.13910">Arxiv</a>
+                            <a href="citations/guidedscenegen.txt" target="_blank">Cite</a>
+                            </span>
                         </div>
                         <div class="tldr-bubble">
                             <strong>TL;DR:</strong> We use a metric-scale geometric proxy to drive scene generation through multi-view diffusion models. We introduce a multimodal panorama generation model to generate starting frames from which we efficiently sample trajectories for world exploration and for 3DGS optimization.
-                        </div>
-                        <div class="mt-2 text-xs link-group text-blue-600 font-medium font-sans">
-                            <a href="https://d3ixi.github.io/GuidedSceneGen/">Project</a>
-                            <a href="https://arxiv.org/abs/2603.13910">Arxiv</a>
-                            <a href="citations/guidedscenegen.txt" target="_blank">Cite</a>
                         </div>
                     </div>
                 </article>
 
                 <!-- PixelSync -->
-                <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                <article class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-5 py-4 first:pt-0 last:pb-0">
+                    <div class="w-36 h-28 md:w-40 md:h-32 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
                         <a href="https://dl.acm.org/doi/10.1145/3804489" class="block w-full h-full"><img src="images/pixelsync.png" alt="PixelSync" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
@@ -352,22 +360,22 @@
                             <a href="https://dl.acm.org/doi/10.1145/3804489" class="pub-link">PixelSync: Enhancing Texture Generation via Explicit Feature Synchronization</a>
                         </p>
                         <p class="text-sm text-gray-600 mb-1">Philipp Drescher, <strong>Edoardo A. Dominici</strong>, Giacomo Nazzaro, Konstantinos Vardis, Stefan Hauswiesner, Markus Steinberger</p>
-                        <div class="mb-2">
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1.5">
                             <span class="venue-tag venue-tag-highlight">I3D 2026</span>
+                            <span class="text-xs link-group text-blue-600 font-medium font-sans">
+                                <a href="https://dl.acm.org/doi/10.1145/3804489">Paper</a>
+                            <a href="citations/pixelsync.txt" target="_blank">Cite</a>
+                            </span>
                         </div>
                         <div class="tldr-bubble">
                             <strong>TL;DR:</strong> Training-free multi-view consistent texture synthesis via attention and latent synchronization in diffusion models.
-                        </div>
-                        <div class="mt-2 text-xs link-group text-blue-600 font-medium font-sans">
-                            <a href="https://dl.acm.org/doi/10.1145/3804489">Paper</a>
-                            <a href="citations/pixelsync.txt" target="_blank">Cite</a>
                         </div>
                     </div>
                 </article>
 
                 <!-- DreamAnywhere -->
-                <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                <article class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-5 py-4 first:pt-0 last:pb-0">
+                    <div class="w-36 h-28 md:w-40 md:h-32 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
                         <a href="projects/dreamanywhere/" class="block w-full h-full"><img src="images/lighthouse_cosmos_square.gif" alt="DreamAnywhere" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
@@ -375,25 +383,25 @@
                             <a href="https://arxiv.org/abs/2506.20367" class="pub-link">DreamAnywhere: Object-Centric Panoramic 3D Scene Generation</a>
                         </p>
                         <p class="text-sm text-gray-600 mb-1"><strong>Edoardo A. Dominici</strong>, Jozef Hladky, Floor Verhoeven, Lukas Radl, Thomas Deixelberger, Stefan Ainetter, Philipp Drescher, Stefan Hauswiesner, Arno Coomans, Giacomo Nazzaro, Konstantinos Vardis, Markus Steinberger</p>
-                        <div class="flex items-center space-x-2 mb-2">
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1.5">
                             <span class="venue-tag venue-tag-highlight">WACV 2026</span>
                             <span class="venue-tag venue-tag-important">Oral</span>
-                        </div>
-                        <div class="tldr-bubble">
-                            <strong>TL;DR:</strong> Modular 3D scene generation from text using 360° panoramas, object-centric decomposition, and hybrid inpainting for immersive navigation and editing.
-                        </div>
-                        <div class="mt-2 text-xs link-group text-blue-600 font-medium font-sans">
-                            <a href="projects/dreamanywhere/">Project</a>
+                            <span class="text-xs link-group text-blue-600 font-medium font-sans">
+                                <a href="projects/dreamanywhere/">Project</a>
                             <a href="https://arxiv.org/abs/2506.20367">Arxiv</a>
                             <a href="https://drive.google.com/file/d/1apjGhC5Hs5M-Ty2H_1Gshyysd93hP-5j/view?usp=share_link" target="_blank">Data</a>
                             <a href="citations/dreamanywhere.txt" target="_blank">Cite</a>
+                            </span>
+                        </div>
+                        <div class="tldr-bubble">
+                            <strong>TL;DR:</strong> Modular 3D scene generation from text using 360° panoramas, object-centric decomposition, and hybrid inpainting for immersive navigation and editing.
                         </div>
                     </div>
                 </article>
 
                 <!-- Real-time Rendering with a Neural Irradiance Volume -->
-                <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                <article class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-5 py-4 first:pt-0 last:pb-0">
+                    <div class="w-36 h-28 md:w-40 md:h-32 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
                         <a href="https://arxiv.org/abs/2602.12949" class="block w-full h-full"><img src="images/paper1036_square.gif" alt="Neural Irradiance Volume" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
@@ -401,22 +409,22 @@
                             <a href="https://arxiv.org/abs/2602.12949" class="pub-link">Real-time Rendering with a Neural Irradiance Volume</a>
                         </p>
                         <p class="text-sm text-gray-600 mb-1">Arno Coomans, Giacomo Nazzaro, <strong>Edoardo A. Dominici</strong>, Christian Döring, Floor Verhoeven, Konstantinos Vardis, Markus Steinberger</p>
-                        <div class="mb-2">
-                            <span class="venue-tag venue-tag-highlight">Eurographics 2026, Computer Graphics Forum 45(2)</span>
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1.5">
+                            <span class="venue-tag venue-tag-highlight">Eurographics 2026<span class="venue-tag-sub"> · Computer Graphics Forum 45(2)</span></span>
+                            <span class="text-xs link-group text-blue-600 font-medium font-sans">
+                                <a href="https://arxiv.org/abs/2602.12949">Arxiv</a>
+                            <a href="citations/neural-irradiance-volume.txt" target="_blank">Cite</a>
+                            </span>
                         </div>
                         <div class="tldr-bubble">
                             <strong>TL;DR:</strong> We introduce an irradiance formulation for neural network-based radiance caching which improves quality and compression compared to existing probe based methods.
-                        </div>
-                        <div class="mt-2 text-xs link-group text-blue-600 font-medium font-sans">
-                            <a href="https://arxiv.org/abs/2602.12949">Arxiv</a>
-                            <a href="citations/neural-irradiance-volume.txt" target="_blank">Cite</a>
                         </div>
                     </div>
                 </article>
 
                 <!-- Real-time Neural Rendering of Dynamic Light Fields -->
-                <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                <article class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-5 py-4 first:pt-0 last:pb-0">
+                    <div class="w-36 h-28 md:w-40 md:h-32 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
                         <a href="https://arnocoomans.be/data/eg2024_paper.pdf" class="block w-full h-full"><img src="images/dylf_square.gif" alt="Dynamic Light Fields" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
@@ -424,22 +432,22 @@
                             <a href="https://arnocoomans.be/data/eg2024_paper.pdf" class="pub-link">Real-time Neural Rendering of Dynamic Light Fields</a>
                         </p>
                         <p class="text-sm text-gray-600 mb-1">Arno Coomans, <strong>Edoardo A. Dominici</strong>, Christian Döring, Joerg H. Mueller, Jozef Hladky, Markus Steinberger</p>
-                        <div class="mb-2">
-                            <span class="venue-tag venue-tag-highlight">Eurographics 2024, Computer Graphics Forum 43(2)</span>
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1.5">
+                            <span class="venue-tag venue-tag-highlight">Eurographics 2024<span class="venue-tag-sub"> · Computer Graphics Forum 43(2)</span></span>
+                            <span class="text-xs link-group text-blue-600 font-medium font-sans">
+                                <a href="https://arnocoomans.be/data/eg2024_paper.pdf">Paper</a>
+                            <a href="citations/dynamic-light-fields.txt" target="_blank">Cite</a>
+                            </span>
                         </div>
                         <div class="tldr-bubble">
                             <strong>TL;DR:</strong> Introduce a temporal extension to neural radiosity and show how dynamic light fields can be cached into compact neural networks and encodings for real-time rendering.
-                        </div>
-                        <div class="mt-2 text-xs link-group text-blue-600 font-medium font-sans">
-                            <a href="https://arnocoomans.be/data/eg2024_paper.pdf">Paper</a>
-                            <a href="citations/dynamic-light-fields.txt" target="_blank">Cite</a>
                         </div>
                     </div>
                 </article>
 
                 <!-- Focus Range -->
-                <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                <article class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-5 py-4 first:pt-0 last:pb-0">
+                    <div class="w-36 h-28 md:w-40 md:h-32 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
                         <a href="https://animallogic.com/technology/publications/focus-range/" class="block w-full h-full"><img src="images/focus_range.gif" alt="Focus Range" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
@@ -447,23 +455,23 @@
                             <a href="https://dedoardo.github.io/downloads/focus_range.pdf" class="pub-link">Focus Range: Production Ray Tracing of Depth of Field</a>
                         </p>
                         <p class="text-sm text-gray-600 mb-1"><strong>Edoardo A. Dominici</strong>, Emanuel Schrade, Basile Fraboni, Luke Emrose, Curtis Black</p>
-                        <div class="mb-2">
-                            <span class="venue-tag venue-tag-highlight">SIGGRAPH Asia 2023 Technical Communications</span>
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1.5">
+                            <span class="venue-tag venue-tag-highlight">SIGGRAPH Asia 2023<span class="venue-tag-sub"> · Technical Communications</span></span>
+                            <span class="text-xs link-group text-blue-600 font-medium font-sans">
+                                <a href="https://animallogic.com/technology/publications/focus-range/">Project</a>
+                            <a href="https://dedoardo.github.io/downloads/focus_range.pdf">Paper</a>
+                            <a href="citations/focus-range.txt" target="_blank">Cite</a>
+                            </span>
                         </div>
                         <div class="tldr-bubble">
                             <strong>TL;DR:</strong> Novel piece-wise linear ray tracing formulation for defocus blur. We integrated it into a production path tracer supporting glossy materials and reflections so that the Leo character could be focused through the looking glass &lt;3
-                        </div>
-                        <div class="mt-2 text-xs link-group text-blue-600 font-medium font-sans">
-                            <a href="https://animallogic.com/technology/publications/focus-range/">Project</a>
-                            <a href="https://dedoardo.github.io/downloads/focus_range.pdf">Paper</a>
-                            <a href="citations/focus-range.txt" target="_blank">Cite</a>
                         </div>
                     </div>
                 </article>
 
                 <!-- PROVIDE -->
-                <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img flex flex-col">
+                <article class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-5 py-4 first:pt-0 last:pb-0">
+                    <div class="w-36 h-28 md:w-40 md:h-32 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img flex flex-col">
                         <a href="https://proceedings.mlr.press/v161/zablotskaia21a.html" class="block w-full h-1/2"><img src="images/video_decomp_2020_0.gif" alt="PROVIDE" class="object-fill w-full h-full"></a>
                         <a href="https://proceedings.mlr.press/v161/zablotskaia21a.html" class="block w-full h-1/2"><img src="images/video_decomp_2020_1.gif" alt="PROVIDE" class="object-fill w-full h-full"></a>
                     </div>
@@ -472,22 +480,22 @@
                             <a href="https://proceedings.mlr.press/v161/zablotskaia21a.html" class="pub-link">PROVIDE: A Probabilistic Framework for Unsupervised Video Decomposition</a>
                         </p>
                         <p class="text-sm text-gray-600 mb-1">Polina Zablotskaia, <strong>Edoardo A. Dominici</strong>, Leonid Sigal, Andreas Lehrmann</p>
-                        <div class="mb-2">
-                            <span class="venue-tag venue-tag-highlight">UAI 2021, Proceedings of Machine Learning Research</span>
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1.5">
+                            <span class="venue-tag venue-tag-highlight">UAI 2021<span class="venue-tag-sub"> · Proceedings of Machine Learning Research</span></span>
+                            <span class="text-xs link-group text-blue-600 font-medium font-sans">
+                                <a href="https://proceedings.mlr.press/v161/zablotskaia21a.html">Project</a>
+                            <a href="citations/provide.txt" target="_blank">Cite</a>
+                            </span>
                         </div>
                         <div class="tldr-bubble">
                             <strong>TL;DR:</strong> Formulate a video as a generative image formation model from multiple objects, then introduce spatio-temporal cues in a variational optimization framework through a 2D-LSTM.
-                        </div>
-                        <div class="mt-2 text-xs link-group text-blue-600 font-medium font-sans">
-                            <a href="https://proceedings.mlr.press/v161/zablotskaia21a.html">Project</a>
-                            <a href="citations/provide.txt" target="_blank">Cite</a>
                         </div>
                     </div>
                 </article>
 
                 <!-- PolyFit -->
-                <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                <article class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-5 py-4 first:pt-0 last:pb-0">
+                    <div class="w-36 h-28 md:w-40 md:h-32 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
                         <a href="http://www.cs.ubc.ca/labs/imager/tr/2020/ClipArtVectorization" class="block w-full h-full"><img src="images/polyfit_2020.png" alt="PolyFit" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
@@ -495,23 +503,23 @@
                             <a href="http://www.cs.ubc.ca/labs/imager/tr/2020/ClipArtVectorization" class="pub-link">PolyFit: Perception-Aligned Vectorization of Raster Clip-Art via Intermediate Polygonal Fitting</a>
                         </p>
                         <p class="text-sm text-gray-600 mb-1"><strong>Edoardo A. Dominici</strong>, Nico Schertler, Jonathan Griffin, Shayan Hoshyari, Leonid Sigal, Alla Sheffer</p>
-                        <div class="mb-2">
-                            <span class="venue-tag venue-tag-highlight">SIGGRAPH 2020, ACM Transactions on Graphics 39(4)</span>
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1.5">
+                            <span class="venue-tag venue-tag-highlight">SIGGRAPH 2020<span class="venue-tag-sub"> · ACM Transactions on Graphics 39(4)</span></span>
+                            <span class="text-xs link-group text-blue-600 font-medium font-sans">
+                                <a href="http://www.cs.ubc.ca/labs/imager/tr/2020/ClipArtVectorization">Project</a>
+                            <a href="https://github.com/dedoardo/polyfit">Code</a>
+                            <a href="citations/polyfit.txt" target="_blank">Cite</a>
+                            </span>
                         </div>
                         <div class="tldr-bubble">
                             <strong>TL;DR:</strong> We introduce an image vectorization algorithm that leverages an intermediate polygonal approximation for regularity detection and to guide the curve fitting.
-                        </div>
-                        <div class="mt-2 text-xs link-group text-blue-600 font-medium font-sans">
-                            <a href="http://www.cs.ubc.ca/labs/imager/tr/2020/ClipArtVectorization">Project</a>
-                            <a href="https://github.com/dedoardo/polyfit">Code</a>
-                            <a href="citations/polyfit.txt" target="_blank">Cite</a>
                         </div>
                     </div>
                 </article>
 
                 <!-- Perception-Driven Semi-Structured Boundary Vectorization -->
-                <article class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6">
-                    <div class="w-36 h-28 md:w-44 md:h-36 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
+                <article class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-5 py-4 first:pt-0 last:pb-0">
+                    <div class="w-36 h-28 md:w-40 md:h-32 flex-shrink-0 bg-white rounded overflow-hidden shadow-sm border border-blue-300 pub-img">
                         <a href="http://www.cs.ubc.ca/labs/imager/tr/2018/PerceptionDrivenVectorization/" class="block w-full h-full"><img src="images/vectorization_2018.png" alt="Perception-Driven Vectorization" class="object-fill w-full h-full"></a>
                     </div>
                     <div class="flex-grow">
@@ -519,16 +527,16 @@
                             <a href="http://www.cs.ubc.ca/labs/imager/tr/2018/PerceptionDrivenVectorization/" class="pub-link">Perception-Driven Semi-Structured Boundary Vectorization</a>
                         </p>
                         <p class="text-sm text-gray-600 mb-1">Shayan Hoshyari, <strong>Edoardo A. Dominici</strong>, Alla Sheffer, Nathan Carr, Zhaowen Wang, Duygu Ceylan, I-Chao Shen</p>
-                        <div class="mb-2">
-                            <span class="venue-tag venue-tag-highlight">SIGGRAPH 2018, ACM Transactions on Graphics 37(4)</span>
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1.5">
+                            <span class="venue-tag venue-tag-highlight">SIGGRAPH 2018<span class="venue-tag-sub"> · ACM Transactions on Graphics 37(4)</span></span>
+                            <span class="text-xs link-group text-blue-600 font-medium font-sans">
+                                <a href="http://www.cs.ubc.ca/labs/imager/tr/2018/PerceptionDrivenVectorization/">Project</a>
+                            <a href="http://www.cs.ubc.ca/labs/imager/tr/2018/PerceptionDrivenVectorization/executable.zip">Demo</a>
+                            <a href="citations/perception-driven-vectorization.txt" target="_blank">Cite</a>
+                            </span>
                         </div>
                         <div class="tldr-bubble">
                             <strong>TL;DR:</strong> We introduce a vectorization algorithm that alternates corner detection and curve fitting guided by perceptual principles to generate clean, artist-friendly boundary curves.
-                        </div>
-                        <div class="mt-2 text-xs link-group text-blue-600 font-medium font-sans">
-                            <a href="http://www.cs.ubc.ca/labs/imager/tr/2018/PerceptionDrivenVectorization/">Project</a>
-                            <a href="http://www.cs.ubc.ca/labs/imager/tr/2018/PerceptionDrivenVectorization/executable.zip">Demo</a>
-                            <a href="citations/perception-driven-vectorization.txt" target="_blank">Cite</a>
                         </div>
                     </div>
                 </article>
