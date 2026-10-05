@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Focus Range &mdash; SIGGRAPH Asia 2023</title>
+<meta name="description" content="Interactive companion to Focus Range: Production Ray Tracing of Depth of Field (SIGGRAPH Asia 2023) &mdash; the piecewise-linear depth-of-field model live in 2D, a WebGL path tracer, and a demo for each production contribution.">
+<meta property="og:title" content="Focus Range &mdash; Production Ray Tracing of Depth of Field">
+<meta property="og:description" content="Interactive project page: play with the focus-range camera model in 2D and 3D.">
+<link rel="icon" href="../../images/focus_range.gif">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,400;1,8..60,500&display=swap">
+<style>[hidden]{display:none!important} html{scroll-behavior:smooth}</style>
+<style>
+/* Layout: one reading column (~1040px) with full-width instrument panels; serif display over sans body, mono for anything measured. Dark-first screening-room palette. */
+:root{
+  color-scheme: dark;
+  --bg:#0d0e12; --surface:#15171d; --surface-2:#1b1e27; --panel-edge:#262a35;
+  --ink:#eae8e1; --ink-2:#b9bac0; --muted:#8b8d98; --line:#2a2d37; --hairline:#20232c;
+  --accent:#e2a34b; --accent-soft:rgba(226,163,75,.13);
+  --beam:#5b9ee8; --beam-soft:rgba(91,158,232,.10);
+  --s-thin:#d95926; --s-gdof:#199e70; --s-range:#3987e5; --good:#2fae2f;
+  --f-serif:'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --f-sans:'Source Sans 3', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-mono:'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    color-scheme: light;
+    --bg:#f2f3f5; --surface:#fbfbfa; --surface-2:#ebecee; --panel-edge:#d7d9dd;
+    --ink:#191a1f; --ink-2:#4b4d55; --muted:#7c7e88; --line:#d4d6db; --hairline:#e5e6e9;
+    --accent:#9c660e; --accent-soft:rgba(178,118,22,.14);
+    --beam:#2a78d6; --beam-soft:rgba(42,120,214,.10);
+    --s-thin:#eb6834; --s-gdof:#1baf7a; --s-range:#2a78d6; --good:#047a04;
+  }
+}
+:root[data-theme="light"]{
+  color-scheme: light;
+  --bg:#f2f3f5; --surface:#fbfbfa; --surface-2:#ebecee; --panel-edge:#d7d9dd;
+  --ink:#191a1f; --ink-2:#4b4d55; --muted:#7c7e88; --line:#d4d6db; --hairline:#e5e6e9;
+  --accent:#9c660e; --accent-soft:rgba(178,118,22,.14);
+  --beam:#2a78d6; --beam-soft:rgba(42,120,214,.10);
+  --s-thin:#eb6834; --s-gdof:#1baf7a; --s-range:#2a78d6; --good:#047a04;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:var(--f-sans); font-size:15.5px; line-height:1.55;
+  margin:0; padding-block:0 64px; padding-inline:20px;
+}
+.col{max-width:980px; margin-inline:auto}
+a{color:var(--ink); text-decoration-color:var(--accent); text-decoration-thickness:1px; text-underline-offset:3px}
+a:hover{color:var(--accent)}
+a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:2px}
+::selection{background:var(--accent-soft)}
+
+/* ---------- header ---------- */
+header{position:relative; padding-block:40px 22px; overflow:visible}
+.glow{position:absolute; inset:0; pointer-events:none; z-index:0; overflow:hidden}
+.glow i{position:absolute; border-radius:50%; filter:blur(46px); opacity:.16}
+.glow .g1{width:300px;height:300px; right:4%; top:-60px; background:var(--accent)}
+.glow .g2{width:190px;height:190px; right:22%; top:70px; background:var(--beam); opacity:.12}
+.glow .g3{width:110px;height:110px; right:13%; top:170px; background:var(--accent); opacity:.10}
+header .col{position:relative; z-index:1}
+.eyebrow{
+  font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--muted); margin:0 0 10px;
+}
+h1{
+  font-family:var(--f-serif); font-weight:600; font-size:clamp(34px, 5vw, 54px);
+  line-height:1.05; margin:0 0 12px; letter-spacing:-.015em; text-wrap:balance;
+}
+.standfirst{
+  font-family:var(--f-serif); font-weight:400; font-size:clamp(15.5px, 1.8vw, 18px);
+  line-height:1.5; color:var(--ink-2); max-width:46em; margin:0 0 14px;
+}
+.standfirst em{color:var(--ink); font-style:italic}
+.byline{display:flex; flex-wrap:wrap; gap:8px 22px; align-items:baseline; font-size:13.5px; color:var(--muted)}
+.byline .names{color:var(--ink-2)}
+.byline nav{display:flex; gap:18px; font-family:var(--f-mono); font-size:13px}
+
+/* ---------- sections ---------- */
+section{margin-top:38px}
+.sec-eyebrow{
+  font-family:var(--f-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); margin:0 0 5px;
+}
+h2{font-family:var(--f-serif); font-weight:600; font-size:clamp(21px,2.8vw,27px); line-height:1.15; margin:0 0 8px; text-wrap:balance}
+.lede{color:var(--ink-2); max-width:46em; margin:0 0 12px; font-size:15px}
+p{max-width:44em}
+.note{font-size:13px; color:var(--muted)}
+
+/* ---------- panels ---------- */
+.panel{
+  background:var(--surface); border:1px solid var(--panel-edge); border-radius:10px;
+  padding:12px; margin-block:6px 12px;
+}
+.panel-head{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:9px}
+
+.tabs{display:flex; gap:4px; background:var(--surface-2); border-radius:8px; padding:4px}
+.tabs button{
+  appearance:none; border:0; background:transparent; color:var(--ink-2);
+  font-family:var(--f-sans); font-size:13.5px; font-weight:500; padding:5px 12px; border-radius:6px; cursor:pointer;
+  border-bottom:2px solid transparent;
+}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{background:var(--surface); color:var(--ink); border-bottom-color:var(--tabc, var(--accent))}
+.tabs button[data-mode="thin"]{--tabc:var(--s-thin)}
+.tabs button[data-mode="gdof"]{--tabc:var(--s-gdof)}
+.tabs button[data-mode="range"]{--tabc:var(--s-range)}
+
+.hint{font-family:var(--f-mono); font-size:12.5px; color:var(--muted)}
+
+canvas{display:block; width:100%; touch-action:none}
+#bench{border-radius:6px; cursor:crosshair}
+
+/* controls */
+.ctls{display:flex; flex-wrap:wrap; gap:8px 18px; margin-top:10px}
+.ctl{display:flex; align-items:center; gap:10px; min-width:0}
+.ctl .nm{font-size:13.5px; color:var(--ink-2); white-space:nowrap}
+.ctl .nm i{font-family:var(--f-serif); font-style:italic}
+.ctl input[type="range"]{width:130px; accent-color:var(--accent); margin:0}
+.ctl output{font-family:var(--f-mono); font-size:12.5px; color:var(--muted); min-width:44px; font-variant-numeric:tabular-nums}
+.ctl.off{display:none}
+.check{display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--ink-2); white-space:nowrap}
+.check input{accent-color:var(--accent); width:15px; height:15px; margin:0}
+
+/* ---------- equations ---------- */
+.eqs{display:grid; gap:10px; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); margin-block:12px; align-items:start}
+.eq{
+  display:flex; align-items:center; gap:16px; justify-content:space-between;
+  background:var(--surface); border:1px solid var(--hairline); border-radius:8px;
+  padding:9px 14px; overflow-x:auto;
+}
+.eq .m{font-family:var(--f-serif); font-size:16.5px; font-style:italic; white-space:nowrap}
+.eq .m .rm{font-style:normal}
+.eq .m sub{font-size:.68em; font-style:italic}
+.eq .m .frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; margin-inline:3px}
+.eq .m .frac .top{border-bottom:1px solid var(--ink); padding-inline:4px; line-height:1.25}
+.eq .m .frac .bot{padding-inline:4px; line-height:1.25}
+.eq .no{font-family:var(--f-mono); font-size:12px; color:var(--muted)}
+.cases{display:inline-flex; align-items:center; gap:6px}
+.cases .brace{font-size:44px; font-weight:300; line-height:.9; font-style:normal; transform:translateY(-2px)}
+.cases table{border-collapse:collapse}
+.cases td{padding:1px 9px 1px 0; font-size:15px}
+.cases td.cond{font-size:12.5px; color:var(--ink-2)}
+
+/* ---------- 3D stage ---------- */
+.pt-stage{position:relative; border-radius:6px; overflow:hidden; background:#0a0b0e}
+#pt{aspect-ratio:16/9; cursor:default}
+.pt-divider{position:absolute; top:0; bottom:0; width:28px; margin-left:-14px; cursor:ew-resize; touch-action:none}
+.pt-divider::before{content:""; position:absolute; top:0; bottom:0; left:13px; width:2px; background:rgba(255,255,255,.75)}
+.pt-divider .knob{
+  position:absolute; top:50%; left:14px; transform:translate(-50%,-50%);
+  width:26px; height:26px; border-radius:50%; background:rgba(20,22,28,.85);
+  border:2px solid rgba(255,255,255,.75); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:11px; letter-spacing:1px;
+}
+.pt-tag{
+  position:absolute; top:10px; font-family:var(--f-mono); font-size:11.5px; letter-spacing:.08em;
+  color:#fff; background:rgba(10,11,14,.55); padding:4px 9px; border-radius:4px; pointer-events:none;
+  transition:opacity .2s;
+}
+.pt-tag-a{left:10px}
+.pt-tag-b{right:10px}
+.pt-spp{
+  position:absolute; bottom:8px; right:10px; font-family:var(--f-mono); font-size:11px;
+  color:rgba(255,255,255,.65); background:rgba(10,11,14,.45); padding:3px 7px; border-radius:4px; pointer-events:none;
+  font-variant-numeric:tabular-nums;
+}
+.pt-fallback{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  color:#c8c8cf; font-size:14.5px; padding:20px; text-align:center;
+}
+.pt-fallback[hidden]{display:none}
+.presets{display:flex; flex-wrap:wrap; gap:7px; margin-bottom:10px}
+.presets button{
+  appearance:none; cursor:pointer; font-family:var(--f-sans); font-size:13px; font-weight:500;
+  color:var(--ink-2); background:var(--surface-2); border:1px solid var(--hairline); border-radius:999px;
+  padding:5px 12px;
+}
+.presets button:hover{color:var(--ink); border-color:var(--panel-edge)}
+.presets button[aria-pressed="true"]{color:var(--ink); border-color:var(--accent); background:var(--accent-soft)}
+.pt-caption{font-size:13.5px; color:var(--ink-2); margin:8px 2px 2px; max-width:none}
+.pt-caption b{color:var(--ink); font-weight:600}
+.pt-ctls{display:grid; grid-template-columns:repeat(auto-fit, minmax(225px, 1fr)); gap:8px 22px; margin-top:8px}
+.pt-ctls .grp{min-width:0}
+.pt-ctls .grp h4{
+  font-family:var(--f-mono); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--muted); margin:0 0 8px; font-weight:500;
+}
+.pt-ctls .ctl{margin-bottom:6px; justify-content:space-between}
+.pt-ctls .ctl input[type="range"]{flex:1; min-width:70px; max-width:170px}
+
+/* ---------- contribution demos ---------- */
+section h3{font-family:var(--f-serif); font-weight:600; font-size:19px; margin:26px 0 5px}
+.demo-note{font-size:13px; color:var(--muted); margin:8px 2px 0; max-width:none; line-height:1.45}
+.panel-head .ctls{margin-top:0}
+.chip{
+  font-family:var(--f-mono); font-size:12px; padding:5px 12px; border-radius:999px;
+  border:1px solid var(--hairline); color:var(--ink-2); white-space:nowrap;
+}
+.chip.ok{color:var(--good); border-color:var(--good)}
+.chip.bad{color:var(--s-thin); border-color:var(--s-thin)}
+.chip.alt{color:var(--beam); border-color:var(--beam)}
+#d-smooth, #d-refr, #d-flat{border-radius:6px; cursor:crosshair}
+
+/* ---------- footer ---------- */
+footer{margin-top:40px; border-top:1px solid var(--hairline); padding-top:18px; font-size:13.5px; color:var(--muted)}
+.cite{position:relative; background:var(--surface); border:1px solid var(--hairline); border-radius:8px; padding:10px 12px; margin:10px 0; overflow-x:auto}
+.cite pre{margin:0; font-family:var(--f-mono); font-size:11.5px; line-height:1.5; color:var(--ink-2)}
+.copybtn{
+  position:absolute; top:8px; right:8px; appearance:none; cursor:pointer;
+  font-family:var(--f-mono); font-size:11.5px; color:var(--ink-2);
+  background:var(--surface-2); border:1px solid var(--hairline); border-radius:6px; padding:5px 10px;
+}
+.copybtn:hover{color:var(--ink)}
+footer p{max-width:60em}
+
+@media (max-width:620px){
+  header{padding-block:26px 16px}
+  section{margin-top:30px}
+  .panel{padding:12px; margin-inline:-8px}
+  .ctl input[type="range"]{width:105px}
+  .eq{flex-direction:column; align-items:flex-start; gap:6px}
+}
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="glow" aria-hidden="true"><i class="g1"></i><i class="g2"></i><i class="g3"></i></div>
+  <div class="col">
+    <p class="eyebrow">Interactive companion &middot; SIGGRAPH Asia 2023 Technical Communications</p>
+    <h1>Focus Range</h1>
+    <p class="standfirst">A thin lens is sharp at exactly one distance. A <em>focus range</em> keeps everything between <em>F</em><sub>1</sub> and <em>F</em><sub>2</sub> sharp, with foreground and background blur on separate dials &mdash; each camera ray traced as three piecewise-linear segments.</p>
+    <div class="byline">
+      <span class="names">Dominici &middot; Schrade &middot; Fraboni &middot; Emrose &middot; Black &mdash; Animal Logic</span>
+      <nav>
+        <a href="https://dedoardo.github.io/">home</a>
+        <a href="https://dedoardo.github.io/downloads/focus_range.pdf">paper&nbsp;pdf</a>
+        <a href="https://doi.org/10.1145/3610543.3626156">doi</a>
+        <a href="#pt-sec">play</a>
+        <a href="#bench-sec">model</a>
+        <a href="#notes-sec">details</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="col">
+
+<!-- ======================= 3D TRACER ======================= -->
+<section id="pt-sec">
+  <p class="sec-eyebrow">The demo</p>
+  <h2>Thin lens vs focus range</h2>
+  <p class="lede">The same construction in a progressive path tracer, converging in your GPU right now. Left of the divider: a thin lens. Right: the focus range. The presets restage the paper&rsquo;s figure comparisons.</p>
+
+  <div class="panel">
+    <div class="presets" id="presets" role="group" aria-label="Presets">
+      <button data-preset="p1" aria-pressed="true" id="preset-p1">Fig.&nbsp;1 &middot; range vs wide-open</button>
+      <button data-preset="p2" aria-pressed="false" id="preset-p2">Fig.&nbsp;1 &middot; range vs stopped-down</button>
+      <button data-preset="p3" aria-pressed="false" id="preset-p3">Fig.&nbsp;3 &middot; glossy at the plane</button>
+      <button data-preset="p4" aria-pressed="false" id="preset-p4">Bokeh &middot; the S&#8321; dial</button>
+    </div>
+    <div class="pt-stage" id="pt-stage">
+      <canvas id="pt" aria-label="Progressive path-traced render comparing thin lens and focus range cameras"></canvas>
+      <div class="pt-divider" id="pt-divider" role="slider" aria-label="Comparison divider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0"><div class="knob">&#8596;</div></div>
+      <div class="pt-tag pt-tag-a" id="pt-tag-a">A &middot; thin lens</div>
+      <div class="pt-tag pt-tag-b" id="pt-tag-b">B &middot; focus range</div>
+      <div class="pt-spp" id="pt-spp">0 spp</div>
+      <div class="pt-fallback" id="pt-fallback" hidden>This demo needs WebGL&nbsp;2. The 2-D bench below shows the full model without it.</div>
+    </div>
+    <p class="pt-caption" id="pt-caption"></p>
+    <div class="pt-ctls">
+      <div class="grp">
+        <h4>A &middot; thin lens</h4>
+        <label class="ctl"><span class="nm">aperture</span><input type="range" id="p-apA" min="0.02" max="1.1" step="0.02" value="0.6"><output id="po-apA" for="p-apA">0.60</output></label>
+        <label class="ctl"><span class="nm">focus distance</span><input type="range" id="p-fA" min="1.5" max="15" step="0.1" value="6.8"><output id="po-fA" for="p-fA">6.8</output></label>
+      </div>
+      <div class="grp">
+        <h4>B &middot; focus range</h4>
+        <label class="ctl"><span class="nm">aperture</span><input type="range" id="p-apB" min="0.02" max="1.1" step="0.02" value="0.6"><output id="po-apB" for="p-apB">0.60</output></label>
+        <label class="ctl"><span class="nm"><i>F</i><sub>1</sub></span><input type="range" id="p-f1" min="1" max="14" step="0.1" value="2.6"><output id="po-f1" for="p-f1">2.6</output></label>
+        <label class="ctl"><span class="nm"><i>F</i><sub>2</sub></span><input type="range" id="p-f2" min="1.2" max="18" step="0.1" value="7.6"><output id="po-f2" for="p-f2">7.6</output></label>
+        <label class="ctl"><span class="nm"><i>S</i><sub>1</sub></span><input type="range" id="p-s1" min="-2" max="0" step="0.05" value="-1.2"><output id="po-s1" for="p-s1">&minus;1.20</output></label>
+      </div>
+      <div class="grp">
+        <h4>Shading &middot; guides</h4>
+        <label class="check"><input type="checkbox" id="p-smooth" checked> smoothed shading rays</label>
+        <label class="ctl" style="margin-top:6px"><span class="nm">&delta;</span><input type="range" id="p-delta" min="0.1" max="1.5" step="0.05" value="0.5"><output id="po-delta" for="p-delta">0.50</output></label>
+        <label class="check" style="margin-top:6px"><input type="checkbox" id="p-guides"> focus planes on the floor</label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 2D BENCH ======================= -->
+<section id="bench-sec">
+  <p class="sec-eyebrow">The model</p>
+  <h2>The optical bench</h2>
+  <p class="lede">Figure&nbsp;2 of the paper, live: one pixel&rsquo;s lens bundle. Drag the pixel on the film, the focus planes, and the objects &mdash; where the fan pinches to a line, that depth is sharp. The strip on the left is the actual flatland render; the chart below shares the same depth axis.</p>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="tabs" role="tablist" aria-label="Camera model" id="bench-tabs">
+        <button role="tab" data-mode="thin" aria-selected="false" id="tab-thin">Thin lens</button>
+        <button role="tab" data-mode="gdof" aria-selected="false" id="tab-gdof">Generalized DoF</button>
+        <button role="tab" data-mode="range" aria-selected="true" id="tab-range">Focus range</button>
+      </div>
+      <span class="hint" id="bench-hint">drag the pixel &middot; the F planes &middot; the objects</span>
+    </div>
+    <canvas id="bench" aria-label="Interactive lens diagram: ray fan for one pixel, flatland render strip, and circle-of-confusion chart"></canvas>
+    <div class="ctls" id="bench-ctls">
+      <label class="ctl" data-modes="thin gdof range">
+        <span class="nm">aperture <i>d<sub>l</sub></i></span>
+        <input type="range" id="b-ap" min="0.2" max="2" step="0.05" value="1.1">
+        <output id="bo-ap" for="b-ap">1.10</output>
+      </label>
+      <label class="ctl" data-modes="thin gdof range">
+        <span class="nm"><i>F</i><sub>1</sub></span>
+        <input type="range" id="b-f1" min="1.5" max="14" step="0.1" value="6">
+        <output id="bo-f1" for="b-f1">6.0</output>
+      </label>
+      <label class="ctl" data-modes="gdof range">
+        <span class="nm"><i>F</i><sub>2</sub></span>
+        <input type="range" id="b-f2" min="2.5" max="18" step="0.1" value="12">
+        <output id="bo-f2" for="b-f2">12.0</output>
+      </label>
+      <label class="ctl" data-modes="gdof range">
+        <span class="nm">background scale <i>S</i><sub>1</sub></span>
+        <input type="range" id="b-s1" min="-2" max="0" step="0.05" value="-1">
+        <output id="bo-s1" for="b-s1">&minus;1.00</output>
+      </label>
+      <label class="ctl" data-modes="gdof">
+        <span class="nm">mid-range blur <i>B</i></span>
+        <input type="range" id="b-bb" min="0" max="1" step="0.05" value="0.45">
+        <output id="bo-bb" for="b-bb">0.45</output>
+      </label>
+    </div>
+  </div>
+
+  <p>One shear per boundary (eq.&nbsp;1): <i>S</i><sub>0</sub> = 1 collapses the bundle onto its chief ray at <i>F</i><sub>1</sub>; <i>S</i><sub>1</sub> &le; 0 fans it back out at <i>F</i><sub>2</sub>. Setting <i>F</i><sub>2</sub> = <i>F</i><sub>1</sub>, <i>S</i><sub>1</sub> = &minus;1 is exactly the thin lens.</p>
+
+  <div class="eqs">
+    <div class="eq"><span class="m">
+      w<sub>i+1</sub> = T(w<sub>i</sub>, t) = <span class="rm">normalize</span>&thinsp;(
+      <span class="frac"><span class="top">w<sub>i</sub></span><span class="bot">w<sub>i,z</sub></span></span>
+      + t&thinsp;l&thinsp;<span class="frac"><span class="top">S<sub>i</sub></span><span class="bot">F<sub>1</sub></span></span> )
+    </span><span class="no">(1)</span></div>
+    <div class="eq"><span class="m">
+      d<sub>c</sub> = <span class="cases"><span class="brace">{</span><table>
+        <tr><td><span class="frac"><span class="top">d<sub>l</sub>&thinsp;f&thinsp;(F<sub>1</sub> &minus; z)</span><span class="bot">z&thinsp;(f + F<sub>1</sub>)</span></span></td><td class="cond">z &lt; F<sub>1</sub></td></tr>
+        <tr><td>0</td><td class="cond">F<sub>1</sub> &le; z &lt; F<sub>2</sub></td></tr>
+        <tr><td>S<sub>1</sub>&thinsp;<span class="frac"><span class="top">d<sub>l</sub>&thinsp;f&thinsp;(F<sub>2</sub> &minus; z)</span><span class="bot">z&thinsp;(f + F<sub>2</sub>)</span></span></td><td class="cond">z &ge; F<sub>2</sub></td></tr>
+      </table></span>
+    </span><span class="no">(2)</span></div>
+  </div>
+
+  <p class="note">The Generalized-DoF tab is the closest prior model [Kosloff &amp; Barsky 2009]: two focus planes with a controllable bulge <i>B</i> between them.</p>
+</section>
+
+<!-- ======================= PRODUCTION NOTES ======================= -->
+<section id="notes-sec">
+  <p class="sec-eyebrow">Production details</p>
+  <h2>The tricky cases, live</h2>
+  <p class="lede">Bending camera rays at two planes is the easy part. Shipping it in Glimpse took three more pieces &mdash; each one a demo.</p>
+
+  <h3>Shading continuity</h3>
+  <p class="lede">A glossy object straddling a focus plane reflects neighbouring pixels in different directions &mdash; a seam across the highlight (Fig.&nbsp;3). Eq.&nbsp;3 evaluates BSDFs with a shading ray that blends the upcoming shear in over a region &delta; before the plane:</p>
+  <div class="eqs"><div class="eq"><span class="m">&wcirc;<sub>i</sub> = T&thinsp;( w<sub>i</sub>, <span class="rm">max</span>&thinsp;(0, 1 &minus; <span class="frac"><span class="top">F<sub>i+1</sub> &minus; z</span><span class="bot">&delta;</span></span>) )</span><span class="no">(3)</span></div></div>
+  <div class="panel">
+    <div class="panel-head">
+      <div class="ctls">
+        <label class="check"><input type="checkbox" id="ds-on" checked> smoothed shading rays</label>
+        <label class="ctl"><span class="nm">&delta;</span><input type="range" id="ds-delta" min="0.1" max="2" step="0.05" value="0.6"><output id="dso-delta" for="ds-delta">0.60</output></label>
+      </div>
+      <span class="hint">drag the sphere through F&#8321;</span>
+    </div>
+    <canvas id="d-smooth" aria-label="Interactive diagram: rays reflecting off a glossy sphere straddling the focus plane, with and without smoothed shading rays"></canvas>
+    <p class="demo-note">The hit geometry never changes &mdash; only the direction the BSDF sees. The strip plots that direction per pixel: a step where the hit crosses a plane when smoothing is off, a ramp over &delta; when it&rsquo;s on. The Fig.&nbsp;3 preset in the path tracer shows the same seam rendered.</p>
+  </div>
+
+  <h3>Refraction must not change the blur</h3>
+  <p class="lede">An &eta; = 1 glass slab should be invisible. But a continuation ray carries whatever partial shear smoothing already applied, so the renderer shears incrementally: a partial amount at each refractive hit, the remainder at the plane (eq.&nbsp;4). Drag the slab &mdash; only the incremental rule leaves the bundle untouched everywhere.</p>
+  <div class="eqs"><div class="eq"><span class="m">t = <span class="rm">max</span>&thinsp;(0, 1 &minus; <span class="frac"><span class="top">F<sub>i+1</sub> &minus; z</span><span class="bot">&delta;</span></span>) &minus; t<sub>acc</sub></span><span class="no">(4)</span></div></div>
+  <div class="panel">
+    <div class="panel-head">
+      <div class="presets" id="dr-modes" role="group" aria-label="Shearing strategy">
+        <button data-rmode="stop" aria-pressed="true" id="dr-stop">stop tracking</button>
+        <button data-rmode="full" aria-pressed="false" id="dr-full">full shear at the planes</button>
+        <button data-rmode="incr" aria-pressed="false" id="dr-incr">incremental &middot; eq. 4</button>
+      </div>
+      <span class="chip" id="dr-chip">&nbsp;</span>
+    </div>
+    <canvas id="d-refr" aria-label="Interactive diagram: a lens bundle passing through a draggable glass slab under three shearing strategies"></canvas>
+    <p class="demo-note">The grey ghost is the glass-free reference. <em>Stop tracking</em> freezes the direction at the slab; <em>full shear</em> double-counts what smoothing already applied near a plane. Both depend on where the slab sits &mdash; eq.&nbsp;4 doesn&rsquo;t.</p>
+  </div>
+
+  <h3>Flats near a focus plane</h3>
+  <p class="lede">Camera-facing discs and ribbons orient to each ray. Inside the shaded wedge, the kink at <i>F</i><sub>1</sub> puts <i>R</i><sub>1</sub>&rsquo;s origin past the disc while <i>R</i><sub>0</sub>&rsquo;s hit lies past the plane &mdash; both halves of the test reject it (Fig.&nbsp;5). The fix: let <i>R</i><sub>1</sub> hit backwards and start inside the primitive.</p>
+  <div class="panel">
+    <div class="panel-head">
+      <label class="check"><input type="checkbox" id="df-flags"> backward-hit flags on <i>R</i><sub>1</sub></label>
+      <span class="chip" id="df-chip">&nbsp;</span>
+    </div>
+    <canvas id="d-flat" aria-label="Interactive diagram: a camera-facing disc near the focus plane, showing where the kinked ray misses it and how backward intersection recovers the hit"></canvas>
+    <p class="demo-note">Drag the disc anywhere &mdash; the miss wedge is computed live from the two rejection conditions. It hugs the plane exactly where production hair and ribbon geometry lives.</p>
+  </div>
+
+  <p class="note">Cost in production: roughly 0.5&ndash;6% over a comparable thin lens at ten bounces across the paper&rsquo;s test scenes &mdash; ray coherence matters more than the extra plane logic.</p>
+</section>
+
+</main>
+
+<footer>
+  <div class="col">
+    <p>Cite the paper:</p>
+    <div class="cite">
+      <button class="copybtn" id="copy-cite" type="button">copy</button>
+      <pre id="cite-text">Edoardo A. Dominici, Emanuel Schrade, Basile Fraboni, Luke Emrose, and Curtis Black. 2023.
+Focus Range: Production Ray Tracing of Depth of Field.
+In SIGGRAPH Asia 2023 Technical Communications (SA Technical Communications '23).
+ACM, New York, NY, USA. https://doi.org/10.1145/3610543.3626156</pre>
+    </div>
+    <p>Everything on this page is re-created live from the paper&rsquo;s equations &mdash; no figures or production imagery are reproduced. Paper &copy; 2023 the authors / ACM.</p>
+  </div>
+</footer>
+
+<script src="js/bench.js"></script>
+<script src="js/tracer.js"></script>
+<script src="js/demos.js"></script>
+<script>
+(function(){
+  var btn = document.getElementById('copy-cite');
+  var txt = document.getElementById('cite-text');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    var s = txt.textContent;
+    try{
+      navigator.clipboard.writeText(s).then(function(){
+        btn.textContent = 'copied'; setTimeout(function(){ btn.textContent = 'copy'; }, 1600);
+      }, fallback);
+    }catch(e){ fallback(); }
+    function fallback(){
+      try{
+        var r = document.createRange(); r.selectNodeContents(txt);
+        var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        btn.textContent = 'select + copy';
+      }catch(e2){}
+    }
+  });
+})();
+</script>
+</body>
+</html>
