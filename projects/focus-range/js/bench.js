@@ -411,7 +411,7 @@ function draw(){
   ctx.strokeStyle = T.line;
   ctx.beginPath(); ctx.moveTo(L.lensX, wy(0) + 0.5); ctx.lineTo(L.W - L.padR, wy(0) + 0.5); ctx.stroke();
   ctx.fillStyle = T.muted;
-  ctx.fillText('circle of confusion — beam width at z', L.lensX + 6, L.chartTop + 9);
+  ctx.fillText('circle of confusion, beam width at z', L.lensX + 6, L.chartTop + 9);
 
   // ghost curves (S1 fan)
   for(var gj = 0; gj < ghosts.length; gj++){

@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Focus Range &mdash; SIGGRAPH Asia 2023</title>
-<meta name="description" content="Interactive companion to Focus Range: Production Ray Tracing of Depth of Field (SIGGRAPH Asia 2023) &mdash; the piecewise-linear depth-of-field model live in 2D, a WebGL path tracer, and a demo for each production contribution.">
-<meta property="og:title" content="Focus Range &mdash; Production Ray Tracing of Depth of Field">
+<meta name="description" content="Interactive companion to Focus Range: Production Ray Tracing of Depth of Field (SIGGRAPH Asia 2023), the piecewise-linear depth-of-field model live in 2D, a WebGL path tracer, and a demo for each production contribution.">
+<meta property="og:title" content="Focus Range, Production Ray Tracing of Depth of Field">
 <meta property="og:description" content="Interactive project page: play with the focus-range camera model in 2D and 3D.">
 <link rel="icon" href="../../images/focus_range.gif">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,400;1,8..60,500&display=swap">
@@ -236,9 +236,9 @@ footer p{max-width:60em}
   <div class="col">
     <p class="eyebrow">Interactive companion &middot; SIGGRAPH Asia 2023 Technical Communications</p>
     <h1>Focus Range</h1>
-    <p class="standfirst">A thin lens is sharp at exactly one distance. A <em>focus range</em> keeps everything between <em>F</em><sub>1</sub> and <em>F</em><sub>2</sub> sharp, with foreground and background blur on separate dials &mdash; each camera ray traced as three piecewise-linear segments.</p>
+    <p class="standfirst">A thin lens is sharp at exactly one distance. A <em>focus range</em> keeps everything between <em>F</em><sub>1</sub> and <em>F</em><sub>2</sub> sharp, with foreground and background blur on separate dials, each camera ray traced as three piecewise-linear segments.</p>
     <div class="byline">
-      <span class="names">Dominici &middot; Schrade &middot; Fraboni &middot; Emrose &middot; Black &mdash; Animal Logic</span>
+      <span class="names">Dominici &middot; Schrade &middot; Fraboni &middot; Emrose &middot; Black, Animal Logic</span>
       <nav>
         <a href="https://dedoardo.github.io/">home</a>
         <a href="https://dedoardo.github.io/downloads/focus_range.pdf">paper&nbsp;pdf</a>
@@ -302,7 +302,7 @@ footer p{max-width:60em}
 <section id="bench-sec">
   <p class="sec-eyebrow">The model</p>
   <h2>The optical bench</h2>
-  <p class="lede">Figure&nbsp;2 of the paper, live: one pixel&rsquo;s lens bundle. Drag the pixel on the film, the focus planes, and the objects &mdash; where the fan pinches to a line, that depth is sharp. The strip on the left is the actual flatland render; the chart below shares the same depth axis.</p>
+  <p class="lede">Figure&nbsp;2 of the paper, live: one pixel&rsquo;s lens bundle. Drag the pixel on the film, the focus planes, and the objects. Where the fan pinches to a line, that depth is sharp. The strip on the left is the actual flatland render; the chart below shares the same depth axis.</p>
 
   <div class="panel">
     <div class="panel-head">
@@ -367,10 +367,10 @@ footer p{max-width:60em}
 <section id="notes-sec">
   <p class="sec-eyebrow">Production details</p>
   <h2>The tricky cases, live</h2>
-  <p class="lede">Bending camera rays at two planes is the easy part. Shipping it in Glimpse took three more pieces &mdash; each one a demo.</p>
+  <p class="lede">Bending camera rays at two planes is the easy part. Shipping it in Glimpse took three more pieces, each one a demo.</p>
 
   <h3>Shading continuity</h3>
-  <p class="lede">A glossy object straddling a focus plane reflects neighbouring pixels in different directions &mdash; a seam across the highlight (Fig.&nbsp;3). Eq.&nbsp;3 evaluates BSDFs with a shading ray that blends the upcoming shear in over a region &delta; before the plane:</p>
+  <p class="lede">A glossy object straddling a focus plane reflects neighbouring pixels in different directions, a seam across the highlight (Fig.&nbsp;3). Eq.&nbsp;3 evaluates BSDFs with a shading ray that blends the upcoming shear in over a region &delta; before the plane:</p>
   <div class="eqs"><div class="eq"><span class="m">&wcirc;<sub>i</sub> = T&thinsp;( w<sub>i</sub>, <span class="rm">max</span>&thinsp;(0, 1 &minus; <span class="frac"><span class="top">F<sub>i+1</sub> &minus; z</span><span class="bot">&delta;</span></span>) )</span><span class="no">(3)</span></div></div>
   <div class="panel">
     <div class="panel-head">
@@ -381,11 +381,11 @@ footer p{max-width:60em}
       <span class="hint">drag the sphere through F&#8321;</span>
     </div>
     <canvas id="d-smooth" aria-label="Interactive diagram: rays reflecting off a glossy sphere straddling the focus plane, with and without smoothed shading rays"></canvas>
-    <p class="demo-note">The hit geometry never changes &mdash; only the direction the BSDF sees. The strip plots that direction per pixel: a step where the hit crosses a plane when smoothing is off, a ramp over &delta; when it&rsquo;s on. The Fig.&nbsp;3 preset in the path tracer shows the same seam rendered.</p>
+    <p class="demo-note">The hit geometry never changes, only the direction the BSDF sees. The strip plots that direction per pixel: a step where the hit crosses a plane when smoothing is off, a ramp over &delta; when it&rsquo;s on. The Fig.&nbsp;3 preset in the path tracer shows the same seam rendered.</p>
   </div>
 
   <h3>Refraction must not change the blur</h3>
-  <p class="lede">An &eta; = 1 glass slab should be invisible. But a continuation ray carries whatever partial shear smoothing already applied, so the renderer shears incrementally: a partial amount at each refractive hit, the remainder at the plane (eq.&nbsp;4). Drag the slab &mdash; only the incremental rule leaves the bundle untouched everywhere.</p>
+  <p class="lede">An &eta; = 1 glass slab should be invisible. But a continuation ray carries whatever partial shear smoothing already applied, so the renderer shears incrementally: a partial amount at each refractive hit, the remainder at the plane (eq.&nbsp;4). Drag the slab, only the incremental rule leaves the bundle untouched everywhere.</p>
   <div class="eqs"><div class="eq"><span class="m">t = <span class="rm">max</span>&thinsp;(0, 1 &minus; <span class="frac"><span class="top">F<sub>i+1</sub> &minus; z</span><span class="bot">&delta;</span></span>) &minus; t<sub>acc</sub></span><span class="no">(4)</span></div></div>
   <div class="panel">
     <div class="panel-head">
@@ -397,21 +397,21 @@ footer p{max-width:60em}
       <span class="chip" id="dr-chip">&nbsp;</span>
     </div>
     <canvas id="d-refr" aria-label="Interactive diagram: a lens bundle passing through a draggable glass slab under three shearing strategies"></canvas>
-    <p class="demo-note">The grey ghost is the glass-free reference. <em>Stop tracking</em> freezes the direction at the slab; <em>full shear</em> double-counts what smoothing already applied near a plane. Both depend on where the slab sits &mdash; eq.&nbsp;4 doesn&rsquo;t.</p>
+    <p class="demo-note">The grey ghost is the glass-free reference. <em>Stop tracking</em> freezes the direction at the slab; <em>full shear</em> double-counts what smoothing already applied near a plane. Both depend on where the slab sits, eq.&nbsp;4 doesn&rsquo;t.</p>
   </div>
 
   <h3>Flats near a focus plane</h3>
-  <p class="lede">Camera-facing discs and ribbons orient to each ray. Inside the shaded wedge, the kink at <i>F</i><sub>1</sub> puts <i>R</i><sub>1</sub>&rsquo;s origin past the disc while <i>R</i><sub>0</sub>&rsquo;s hit lies past the plane &mdash; both halves of the test reject it (Fig.&nbsp;5). The fix: let <i>R</i><sub>1</sub> hit backwards and start inside the primitive.</p>
+  <p class="lede">Camera-facing discs and ribbons orient to each ray. Inside the shaded wedge, the kink at <i>F</i><sub>1</sub> puts <i>R</i><sub>1</sub>&rsquo;s origin past the disc while <i>R</i><sub>0</sub>&rsquo;s hit lies past the plane, so both halves of the test reject it (Fig.&nbsp;5). The fix: let <i>R</i><sub>1</sub> hit backwards and start inside the primitive.</p>
   <div class="panel">
     <div class="panel-head">
       <label class="check"><input type="checkbox" id="df-flags"> backward-hit flags on <i>R</i><sub>1</sub></label>
       <span class="chip" id="df-chip">&nbsp;</span>
     </div>
     <canvas id="d-flat" aria-label="Interactive diagram: a camera-facing disc near the focus plane, showing where the kinked ray misses it and how backward intersection recovers the hit"></canvas>
-    <p class="demo-note">Drag the disc anywhere &mdash; the miss wedge is computed live from the two rejection conditions. It hugs the plane exactly where production hair and ribbon geometry lives.</p>
+    <p class="demo-note">Drag the disc anywhere, the miss wedge is computed live from the two rejection conditions. It hugs the plane exactly where production hair and ribbon geometry lives.</p>
   </div>
 
-  <p class="note">Cost in production: roughly 0.5&ndash;6% over a comparable thin lens at ten bounces across the paper&rsquo;s test scenes &mdash; ray coherence matters more than the extra plane logic.</p>
+  <p class="note">Cost in production: roughly 0.5&ndash;6% over a comparable thin lens at ten bounces across the paper&rsquo;s test scenes, ray coherence matters more than the extra plane logic.</p>
 </section>
 
 </main>
@@ -426,7 +426,7 @@ Focus Range: Production Ray Tracing of Depth of Field.
 In SIGGRAPH Asia 2023 Technical Communications (SA Technical Communications '23).
 ACM, New York, NY, USA. https://doi.org/10.1145/3610543.3626156</pre>
     </div>
-    <p>Everything on this page is re-created live from the paper&rsquo;s equations &mdash; no figures or production imagery are reproduced. Paper &copy; 2023 the authors / ACM.</p>
+    <p>Everything on this page is re-created live from the paper&rsquo;s equations, no figures or production imagery are reproduced. Paper &copy; 2023 the authors / ACM.</p>
   </div>
 </footer>
 

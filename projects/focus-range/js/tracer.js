@@ -437,8 +437,8 @@ byId('p-guides').addEventListener('change', function(){ P.guides = this.checked;
 
 /* ------------------------------------------------ presets ------------------------------------------------ */
 var CAP = {
-  p1: '<b>Fig. 1, b vs c.</b> A: wide open on the gold character — the red one blurs out. B: the range covers both and S₁ still melts the background.',
-  p2: '<b>Fig. 1, b vs d.</b> A: stopped down — both sharp, but the bokeh dies. B: keeps both, trades nothing.',
+  p1: '<b>Fig. 1, b vs c.</b> A: wide open on the gold character, the red one blurs out. B: the range covers both and S₁ still melts the background.',
+  p2: '<b>Fig. 1, b vs d.</b> A: stopped down, both sharp, but the bokeh dies. B: keeps both, trades nothing.',
   p3: '<b>Fig. 3.</b> <i>F</i>₁ slices the glossy sphere. Toggle <em>smoothed shading rays</em>: off → a seam across the reflection at the plane; on → eq. 3 blends it over δ.',
   p4: '<b>The S₁ dial.</b> A tight range on the gold character, S₁ = −1.8: background bokeh far beyond any thin lens at this aperture.'
 };
