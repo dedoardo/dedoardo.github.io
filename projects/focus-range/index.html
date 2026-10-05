@@ -55,7 +55,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
 ::selection{background:var(--accent-soft)}
 
 /* ---------- header ---------- */
-header{position:relative; padding-block:40px 22px; overflow:visible}
+header{position:relative; padding-block:26px 0; overflow:visible}
 .glow{position:absolute; inset:0; pointer-events:none; z-index:0; overflow:hidden}
 .glow i{position:absolute; border-radius:50%; filter:blur(46px); opacity:.16}
 .glow .g1{width:300px;height:300px; right:4%; top:-60px; background:var(--accent)}
@@ -64,24 +64,12 @@ header{position:relative; padding-block:40px 22px; overflow:visible}
 header .col{position:relative; z-index:1}
 .tldr{
   font-family:var(--f-mono); font-size:13px; line-height:1.55; color:var(--ink-2);
-  margin:0 0 12px; max-width:52em;
+  margin:0; max-width:52em;
 }
 .tldr b{
   color:var(--accent); font-weight:500; letter-spacing:.1em; text-transform:uppercase;
   font-size:11px; margin-right:7px;
 }
-h1{
-  font-family:var(--f-serif); font-weight:600; font-size:clamp(34px, 5vw, 54px);
-  line-height:1.05; margin:0 0 12px; letter-spacing:-.015em; text-wrap:balance;
-}
-.standfirst{
-  font-family:var(--f-serif); font-weight:400; font-size:clamp(15.5px, 1.8vw, 18px);
-  line-height:1.5; color:var(--ink-2); max-width:46em; margin:0 0 14px;
-}
-.standfirst em{color:var(--ink); font-style:italic}
-.byline{display:flex; flex-wrap:wrap; gap:8px 22px; align-items:baseline; font-size:13.5px; color:var(--muted)}
-.byline .names{color:var(--ink-2)}
-.byline nav{display:flex; gap:18px; font-family:var(--f-mono); font-size:13px}
 
 /* ---------- sections ---------- */
 section{margin-top:38px}
@@ -222,7 +210,7 @@ footer{margin-top:40px; border-top:1px solid var(--hairline); padding-top:18px; 
 footer p{max-width:60em}
 
 @media (max-width:620px){
-  header{padding-block:26px 16px}
+  header{padding-block:18px 0}
   section{margin-top:30px}
   .panel{padding:12px; margin-inline:-8px}
   .ctl input[type="range"]{width:105px}
@@ -239,19 +227,6 @@ footer p{max-width:60em}
   <div class="glow" aria-hidden="true"><i class="g1"></i><i class="g2"></i><i class="g3"></i></div>
   <div class="col">
     <p class="tldr"><b>TL;DR</b> Piecewise linear ray-tracing for artist controllable defocus blur in production ray tracers</p>
-    <h1>Focus Range</h1>
-    <p class="standfirst">A thin lens is sharp at exactly one distance. A <em>focus range</em> keeps everything between <em>F</em><sub>1</sub> and <em>F</em><sub>2</sub> sharp, with foreground and background blur on separate dials, each camera ray traced as three piecewise-linear segments.</p>
-    <div class="byline">
-      <span class="names">Dominici &middot; Schrade &middot; Fraboni &middot; Emrose &middot; Black, Animal Logic</span>
-      <nav>
-        <a href="https://dedoardo.github.io/">home</a>
-        <a href="https://dedoardo.github.io/downloads/focus_range.pdf">paper&nbsp;pdf</a>
-        <a href="https://doi.org/10.1145/3610543.3626156">doi</a>
-        <a href="#pt-sec">play</a>
-        <a href="#bench-sec">model</a>
-        <a href="#notes-sec">details</a>
-      </nav>
-    </div>
   </div>
 </header>
 
